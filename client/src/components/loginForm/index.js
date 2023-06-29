@@ -5,7 +5,7 @@ import { LOGIN } from '../../utils/mutations';
 import { Link } from 'react-router-dom';
 
 
-function LoginForm(props) {
+function LoginForm() {
     const [formState, setFormState] = useState({ email: '', password: '' });
     const [login, { error }] = useMutation(LOGIN);
   

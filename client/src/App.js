@@ -9,7 +9,7 @@ import {
 import { setContext } from '@apollo/client/link/context';
 
 
-import Dashboard from './pages/dashboard';
+import Dashboard from './pages/Dashboard';
 
 import './App.css';
 

@@ -9,8 +9,9 @@ import {
 import { setContext } from '@apollo/client/link/context';
 
 
-import Dashboard from './pages/Dashboard';
+import Calendar from './components/Calendar';
 import EntryForm from './pages/EntryForm';
+
 import './App.css';
 
 const httpLink = createHttpLink({
@@ -42,6 +43,7 @@ function App() {
         <div className="App">
           <Routes>
             <Route path="/" element={<EntryForm />} />
+            <Route path="/calendar" element={<Calendar />} />
           </Routes>
         </div>
       </Router>

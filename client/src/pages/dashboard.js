@@ -1,14 +1,9 @@
-import React from 'react';
-import LoginForm from '../components/LoginForm';
+import React, { useState } from 'react';
 
 
 
 function Dashboard() {
-    return (
-        <div>
-            <LoginForm />
-        </div>
-    );
-};
+
+}
 
 export default Dashboard;

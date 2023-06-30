@@ -33,8 +33,6 @@ function LoginForm() {
 
 return (
     <div className="container my-1">
-      <Link to="/signup">Signup</Link>
-
       <h2>Login</h2>
       <form onSubmit={handleFormSubmit}>
         <div className="flex-row space-between my-2">

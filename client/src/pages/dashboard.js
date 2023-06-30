@@ -9,6 +9,6 @@ function Dashboard() {
             <LoginForm />
         </div>
     );
-}
+};
 
 export default Dashboard;

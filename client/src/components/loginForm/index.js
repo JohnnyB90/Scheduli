@@ -5,7 +5,7 @@ import { LOGIN } from '../../utils/mutations';
 import { Link } from 'react-router-dom';
 
 
-function LoginForm(props) {
+function LoginForm() {
     const [formState, setFormState] = useState({ email: '', password: '' });
     const [login, { error }] = useMutation(LOGIN);
   
@@ -33,8 +33,6 @@ function LoginForm(props) {
 
 return (
     <div className="container my-1">
-      <Link to="/signup">Signup</Link>
-
       <h2>Login</h2>
       <form onSubmit={handleFormSubmit}>
         <div className="flex-row space-between my-2">

@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import profileImage from "../../Assets/images/profile-img3.jpg";
-import "./style.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 
 export default function Contact() {
   const [formState, setFormState] = useState({
     firstName: "",
-    lastName:"",
+    lastName: "",
     email: "",
     phone: "",
     message: "",
@@ -15,7 +12,7 @@ export default function Contact() {
 
   const maxMessageLength = 300;
   const [remainingChars, setRemainingChars] = useState(maxMessageLength);
-  
+
   const { firstName, lastName, email, phone, message } = formState;
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -58,20 +55,20 @@ export default function Contact() {
       },
       body: JSON.stringify(formState),
     })
-    .then((response) => {
-      if (response.ok) {
-        // Email sent successfully
-        setSuccessMessage("Email sent successfully");
-        setErrorMessage("");
-        // Clear success message after 4 seconds
-        setTimeout(() => {
+      .then((response) => {
+        if (response.ok) {
+          // Email sent successfully
+          setSuccessMessage("Email sent successfully");
+          setErrorMessage("");
+          // Clear success message after 4 seconds
+          setTimeout(() => {
+            setSuccessMessage("");
+          }, 2000);
+        } else {
+          // Error sending email
+          setErrorMessage("Error sending email");
           setSuccessMessage("");
-        }, 2000);
-      } else {
-        // Error sending email
-        setErrorMessage("Error sending email");
-        setSuccessMessage("");
-      }
+        }
       })
       .catch((error) => {
         console.error("Error sending email", error);
@@ -81,10 +78,10 @@ export default function Contact() {
 
     setFormState({
       firstName: "",
-      lastName:"",
+      lastName: "",
       email: "",
-      phone:"",
-      message: ""
+      phone: "",
+      message: "",
     });
 
     setRemainingChars(maxMessageLength);
@@ -96,31 +93,33 @@ export default function Contact() {
         <div className="col-md-8">
           <div className="card" id="header-color">
             <div className="card-body p-5 contact-form">
-              <h1 className="card-title text-white text-center">Book an Appointment</h1>
+              <h1 className="card-title text-white text-center">
+                Book an Appointment
+              </h1>
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="name" className="form-label text-white">
+                  <label htmlFor="firstName" className="form-label text-white">
                     First Name
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="name"
-                    name="name"
+                    id="firstName"
+                    name="firstName"
                     placeholder="John"
                     value={firstName}
                     onChange={handleChange}
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="name" className="form-label text-white">
+                  <label htmlFor="lastName" className="form-label text-white">
                     Last Name
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="name"
-                    name="name"
+                    id="lastName"
+                    name="lastName"
                     placeholder="Doe"
                     value={lastName}
                     onChange={handleChange}
@@ -167,9 +166,13 @@ export default function Contact() {
                     value={message}
                     onChange={handleChange}
                   ></textarea>
-                  <div className="text-right text-white">{remainingChars}/{maxMessageLength}</div>
+                  <div className="text-right text-white">
+                    {remainingChars}/{maxMessageLength}
+                  </div>
                 </div>
-                <div className="mb-3 text-center"> {/* Add the 'text-center' class */}
+                <div className="mb-3 text-center">
+                  {" "}
+                  {/* Add the 'text-center' class */}
                   <button type="submit" className="btn btn-dark text-white">
                     Submit
                   </button>
@@ -187,13 +190,6 @@ export default function Contact() {
               )}
             </div>
           </div>
-        </div>
-        <div className="col-md-4 d-flex align-items-center justify-content-center">
-          <img
-            src={profileImage}
-            alt="profileimage"
-            className="aboutImage img-fluid m-3"
-          />
         </div>
       </div>
     </section>

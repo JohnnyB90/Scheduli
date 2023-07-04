@@ -3,34 +3,48 @@ const { Appointment } = require('../../models');
 const withAuth = require('../../utils/auth');
 
 const nodeMailer = require('nodemailer');
+const cors = require('cors');
 require('dotenv').config();
+
+router.use(cors());
+
+router.post('/appointment_details', (req, res) => {
+  const output = `
+  <html>
+  `
+})
 
 router.post('/', withAuth, async (req, res) => {
     try {
+        const { email, firstName, lastName, phone, message } = req.body;
+
         const newAppointment = await Appointment.create({
-            // To be continued...
-            email: req.body.email,
-            first_name: req.body.first_name,
-            last_name: req.body.last_name
+
+            firstName: `${firstName}`,
+            lastName: `${lastName}`,
+            phone: `${phone}`,
+            email: `${email}`,
+            message: `${message}`
         });
         let transporter = nodeMailer.createTransport({
             service: 'gmail',
             auth: {
               type: 'OAuth2',
-              user: process.env.MAIL_USERNAME,
-              pass: process.env.MAIL_PASSWORD,
-              clientId: process.env.OAUTH_CLIENTID,
-              clientSecret: process.env.OAUTH_CLIENT_SECRET,
-              refreshToken: process.env.OAUTH_REFRESH_TOKEN
+              user: process.env.REACT_APP_MAIL_USERNAME,
+              // pass: process.env.MAIL_PASSWORD,
+              clientId: process.env.REACT_APP_OAUTH_CLIENTID,
+              clientSecret: process.env.REACT_APP_OAUTH_CLIENT_SECRET,
+              refreshToken: process.env.REACT_APP_OAUTH_REFRESH_TOKEN
             }
           });
 
           let mailOptions = {
-            from: 'scheduli@gmail.com',
-            to: req.body.email,
-            subject: 'Haircut Appointment',
+            from: 'scheduli001@gmail.com',
+            to: `${email}`,
+            subject: 'Appointment Details',
             // Text will show the user an email with information about the appointment made
-            text: `You created an appointment for`
+            text: `You created an appointment`,
+            html: output
           };
 
           transporter.sendMail(mailOptions, function(err, data) {

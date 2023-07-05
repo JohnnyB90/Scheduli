@@ -1,66 +1,73 @@
-const router = require('express').Router();
-const { Appointment } = require('../../models');
-const withAuth = require('../../utils/auth');
-
-const nodeMailer = require('nodemailer');
-const cors = require('cors');
 require('dotenv').config();
+const router = require('express').Router();
+const nodeMailer = require('nodemailer');
+const debug = require('debug')('app:email');
+const cors = require('cors');
+const { Appointment } = require('../../models');
 
 router.use(cors());
 
-router.post('/appointment_details', (req, res) => {
-  const output = `
-  <html>
-  `
-})
 
-router.post('/', withAuth, async (req, res) => {
-    try {
-        const { email, firstName, lastName, phone, message } = req.body;
+// Nodemailer setup
+let transporter = nodeMailer.createTransport({
+  service: 'gmail',
+  auth: {
+    type: 'OAuth2',
+    user: process.env.REACT_APP_MAIL_USERNAME,
+    clientId: process.env.REACT_APP_OAUTH_CLIENTID,
+    clientSecret: process.env.REACT_APP_OAUTH_CLIENT_SECRET,
+    refreshToken: process.env.REACT_APP_OAUTH_REFRESH_TOKEN,
+  },
+});
+console.log(transporter);
 
-        const newAppointment = await Appointment.create({
+router.post('/', async (req, res) => {
+  try {
+    const { email, firstName, lastName, phone, message } = req.body;
 
-            firstName: `${firstName}`,
-            lastName: `${lastName}`,
-            phone: `${phone}`,
-            email: `${email}`,
-            message: `${message}`
-        });
-        let transporter = nodeMailer.createTransport({
-            service: 'gmail',
-            auth: {
-              type: 'OAuth2',
-              user: process.env.REACT_APP_MAIL_USERNAME,
-              // pass: process.env.MAIL_PASSWORD,
-              clientId: process.env.REACT_APP_OAUTH_CLIENTID,
-              clientSecret: process.env.REACT_APP_OAUTH_CLIENT_SECRET,
-              refreshToken: process.env.REACT_APP_OAUTH_REFRESH_TOKEN
-            }
-          });
+    const newAppointment = await Appointment.create({
+      firstName,
+      lastName,
+      email,
+      phone,
+      message,
+    });
 
-          let mailOptions = {
-            from: 'scheduli001@gmail.com',
-            to: `${email}`,
-            subject: 'Appointment Details',
-            // Text will show the user an email with information about the appointment made
-            text: `You created an appointment`,
-            html: output
-          };
+    const output = `
+      <html>
+        <body>
+          <h1>Appointment Details</h1>
+          <p>Name: ${firstName}${lastName}</p>
+          <p>Email: ${email}</p>
+          <p>Phone: ${phone}</p>
+          <p>Check-in Time: </p>
+          <p>Message: ${message}</p>
+        </body>
+      </html>
+    `;
 
-          transporter.sendMail(mailOptions, function(err, data) {
-            if (err) {
-              console.log('Error ' + err);
-            } else {
-              console.log('Email sent successfully');
-            }
-          });
+    let mailOptions = {
+      from: process.env.REACT_APP_MAIL_USERNAME, // Use the same sender email as the transporter
+      to: email,
+      subject: 'Appointment Details',
+      text: 'Thank you',
+      html: output,
+    };
 
-        // if the user is successfully created, the new response will be returned as json
-        res.status(200).json(newAppointment)
-
-    } catch (err) {
-        res.status(400).json(err);
-    }
+    transporter.sendMail(mailOptions, function (err, data) {
+      if (err) {
+        console.log('Error:', err);
+        res.status(500).json({ message: 'Error sending email' });
+      } else {
+        console.log('Email sent successfully');
+        res.status(200).json(newAppointment);
+      }
+    });
+  } catch (err) {
+    console.log('Error:', err);
+    res.status(500).json({ message: 'Error creating appointment' });
+  }
 });
 
 module.exports = router;
+

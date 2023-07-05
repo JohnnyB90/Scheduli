@@ -43,9 +43,9 @@ function App() {
       <Router>
         <div className="App">
           <Routes>
-            <Route path="/" element={<EntryForm />} />
+            <Route path="/appointment-setup" element={<EntryForm />} />
             <Route path="/calendar" element={<Calendar />} />
-            <Route path='/appointment-setup' element={<ClientAppointment />} />
+            <Route path='/' element={<ClientAppointment />} />
           </Routes>
         </div>
       </Router>

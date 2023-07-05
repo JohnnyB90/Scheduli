@@ -23,6 +23,34 @@ const userSchema = new Schema({
     type: String,
     required: true,
     minlength: 5
+  },
+  phoneNumber: {
+    type: String,
+    required: true
+  },
+  businessName: {
+    type: String,
+    required: true
+  },
+  businessAddress: {
+    type: String,
+    required: true
+  },
+  zipCode: {
+    type: String,
+    required: true
+  },
+  city: {
+    type: String,
+    required: true
+  },
+  state: {
+    type: String,
+    required: true
+  },
+  country: {
+    type: String,
+    required: true
   }
 });
 

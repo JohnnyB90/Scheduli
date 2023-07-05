@@ -19,7 +19,6 @@ let transporter = nodeMailer.createTransport({
     refreshToken: process.env.REACT_APP_OAUTH_REFRESH_TOKEN,
   },
 });
-console.log(transporter);
 
 router.post('/', async (req, res) => {
   try {

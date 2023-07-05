@@ -45,36 +45,36 @@ export default function Contact() {
     setFormState({ ...formState, [name]: value });
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
-    fetch("/api/appointment_details", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formState),
-    })
-      .then((response) => {
-        if (response.ok) {
-          // Email sent successfully
-          setSuccessMessage("Email sent successfully");
-          setErrorMessage("");
-          // Clear success message after 4 seconds
-          setTimeout(() => {
-            setSuccessMessage("");
-          }, 2000);
-        } else {
-          // Error sending email
-          setErrorMessage("Error sending email");
+    try {
+      const response = await fetch("/api/appointment_details", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formState),
+      });
+
+      if (response.ok) {
+        // Email sent successfully
+        setSuccessMessage("Email sent successfully");
+        setErrorMessage("");
+        // Clear success message after 4 seconds
+        setTimeout(() => {
           setSuccessMessage("");
-        }
-      })
-      .catch((error) => {
-        console.error("Error sending email", error);
+        }, 2000);
+      } else {
+        // Error sending email
         setErrorMessage("Error sending email");
         setSuccessMessage("");
-      });
+      }
+    } catch (error) {
+      console.error("Error sending email", error);
+      setErrorMessage("Error sending email");
+      setSuccessMessage("");
+    }
 
     setFormState({
       firstName: "",
@@ -93,12 +93,12 @@ export default function Contact() {
         <div className="col-md-8">
           <div className="card" id="header-color">
             <div className="card-body p-5 contact-form">
-              <h1 className="card-title text-white text-center">
+              <h1 className="card-title text-Black text-center">
                 Book an Appointment
               </h1>
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="firstName" className="form-label text-white">
+                  <label htmlFor="firstName" className="form-label text-black">
                     First Name
                   </label>
                   <input
@@ -112,7 +112,7 @@ export default function Contact() {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="lastName" className="form-label text-white">
+                  <label htmlFor="lastName" className="form-label text-black">
                     Last Name
                   </label>
                   <input
@@ -126,7 +126,7 @@ export default function Contact() {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="email" className="form-label text-white">
+                  <label htmlFor="email" className="form-label text-black">
                     Email address
                   </label>
                   <input
@@ -140,7 +140,7 @@ export default function Contact() {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="phone" className="form-label text-white">
+                  <label htmlFor="phone" className="form-label text-black">
                     Phone number
                   </label>
                   <input
@@ -154,7 +154,7 @@ export default function Contact() {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="message" className="form-label text-white">
+                  <label htmlFor="message" className="form-label text-black">
                     Message
                   </label>
                   <textarea
@@ -162,7 +162,7 @@ export default function Contact() {
                     id="message"
                     name="message"
                     rows="3"
-                    placeholder="Describe your project"
+                    placeholder="Enter details your appointment."
                     value={message}
                     onChange={handleChange}
                   ></textarea>
@@ -171,20 +171,18 @@ export default function Contact() {
                   </div>
                 </div>
                 <div className="mb-3 text-center">
-                  {" "}
-                  {/* Add the 'text-center' class */}
                   <button type="submit" className="btn btn-dark text-white">
                     Submit
                   </button>
                 </div>
               </form>
               {successMessage && (
-                <div className="text-success mt-3 text-white text-bold text-center">
+                <div className="text-success mt-3 text-black text-bold text-center">
                   {successMessage}
                 </div>
               )}
               {errorMessage && (
-                <div className="text-danger mt-3 text-white text-bold text-center">
+                <div className="text-danger mt-3 text-black text-bold text-center">
                   {errorMessage}
                 </div>
               )}

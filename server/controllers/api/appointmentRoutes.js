@@ -46,7 +46,7 @@ router.post('/', async (req, res) => {
     `;
 
     let mailOptions = {
-      from: process.env.REACT_APP_MAIL_USERNAME, // Use the same sender email as the transporter
+      from: process.env.REACT_APP_MAIL_USERNAME,
       to: email,
       subject: 'Appointment Details',
       text: 'Thank you',

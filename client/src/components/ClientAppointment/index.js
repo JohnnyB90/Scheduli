@@ -16,6 +16,7 @@ export default function Contact() {
   const { firstName, lastName, email, phone, message } = formState;
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -65,6 +66,7 @@ export default function Contact() {
         setTimeout(() => {
           setSuccessMessage("");
         }, 2000);
+        setSubmitted(true);
       } else {
         // Error sending email
         setErrorMessage("Error sending email");
@@ -76,15 +78,22 @@ export default function Contact() {
       setSuccessMessage("");
     }
 
-    setFormState({
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      message: "",
-    });
-
     setRemainingChars(maxMessageLength);
+  }
+
+  if (submitted) {
+    return (
+      <>
+        <div>
+          <h1>Email sent successfully.</h1>
+        </div>
+        <div>
+          <h4>Thank you {firstName} {lastName} for creating an appointment with us.</h4>
+          <h4>A confirmation email has been sent to {email}.</h4>
+          <p>If you find that you need to cancel or reschedule, please contact us via email or phone.</p>
+        </div>
+      </>
+    );
   }
 
   return (

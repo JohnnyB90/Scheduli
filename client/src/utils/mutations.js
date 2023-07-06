@@ -37,19 +37,7 @@ export const UPDATE_USER = gql`
       city: $city
       state: $state
       country: $country
-    ) {
-      _id
-      firstName
-      lastName
-      email
-      phoneNumber
-      businessName
-      businessAddress
-      zipCode
-      city
-      state
-      country
-    }
+    ) 
   }
 `;
 

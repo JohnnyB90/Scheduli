@@ -27,8 +27,7 @@ function SignupForm() {
         variables: { ...formState },
       });
 
-      const token = data.addUser.token;
-      Auth.login(token);
+      Auth.login(data.addUser.token);
     } catch (error) {
       console.error(error);
     }

@@ -2,19 +2,23 @@ import React, { useState } from "react";
 import Auth from '../../utils/auth';
 import { useMutation } from '@apollo/client';
 import { LOGIN } from '../../utils/mutations';
+// import { redirect } from 'react-router-dom';
 
 function LoginForm() {
     const [formState, setFormState] = useState({ email: '', password: '' });
     const [login, { error }] = useMutation(LOGIN);
-  
+
     const handleFormSubmit = async (event) => {
       event.preventDefault();
       try {
-        const mutationResponse = await login({
+        const { data } = await login({
           variables: { email: formState.email, password: formState.password },
         });
-        const token = mutationResponse.data.login.token;
-        Auth.login(token);
+
+        Auth.login(data.login.token);
+        // we tried react redirect, but it broke
+        // redirect('/dashboard');
+        window.location.replace('/dashboard')
       } catch (e) {
         console.log(e);
       }

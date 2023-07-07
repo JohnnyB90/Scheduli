@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server-express');
+const { gql } = require("apollo-server-express");
 
 const userTypeDefs = gql`
   type User {
@@ -26,17 +26,29 @@ const userTypeDefs = gql`
   }
 
   type Mutation {
-    addUser(firstName: String!, lastName: String!, email: String!, password: String!, phoneNumber: String!, businessName: String!, businessAddress: String!, zipCode: String!,  city: String!, state: String!, country: String!): Auth
+    addUser(
+      firstName: String!
+      lastName: String!
+      email: String!
+      password: String!
+      phoneNumber: String!
+      businessName: String!
+      businessAddress: String!
+      zipCode: String!
+      city: String!
+      state: String!
+      country: String!
+    ): Auth
     updateUser(
-      _id: ID!, 
-      email: String, 
-      password: String, 
-      phoneNumber: String,
-      businessName: String,
-      businessAddress: String,
-      zipCode: String,
-      city: String,
-      state: String,
+      _id: ID!
+      email: String
+      password: String
+      phoneNumber: String
+      businessName: String
+      businessAddress: String
+      zipCode: String
+      city: String
+      state: String
       country: String
     ): User
     deleteUser(_id: ID!): User
@@ -45,4 +57,3 @@ const userTypeDefs = gql`
 `;
 
 module.exports = userTypeDefs;
-

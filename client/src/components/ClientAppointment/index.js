@@ -16,6 +16,7 @@ export default function Contact() {
   const { firstName, lastName, email, phone, message } = formState;
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -65,6 +66,7 @@ export default function Contact() {
         setTimeout(() => {
           setSuccessMessage("");
         }, 2000);
+        setSubmitted(true);
       } else {
         // Error sending email
         setErrorMessage("Error sending email");
@@ -76,22 +78,37 @@ export default function Contact() {
       setSuccessMessage("");
     }
 
-    setFormState({
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      message: "",
-    });
-
     setRemainingChars(maxMessageLength);
+  }
+
+  if (submitted) {
+    // setTimeout(() => {
+    return (
+      <section className="container">
+        <div className="row justify-content-center m-3">
+          <div className="col-md-6 col-lg-8">
+            <div className="m-3">
+              <h1 className="p-3">Your appointment has been scheduled!</h1>
+            </div>
+            <div className="card">
+              <h4 className="pt-3">Thank you, {firstName} {lastName}, for doing business with us.</h4>
+              <div className="p-3">
+                <p className="">A confirmation email has been sent to {email}.</p>
+                <p className="">If you find that you need to cancel or reschedule your appointment, please contact us via email or phone.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+    // }, 2000);
   }
 
   return (
     <section className="container">
-      <div className="row">
-        <div className="col-md-8">
-          <div className="card" id="header-color">
+      <div className="row justify-content-center">
+        <div className="col-md-6 col-lg-8">
+          <div className="card m-3" id="header-color">
             <div className="card-body p-5 contact-form">
               <h1 className="card-title text-Black text-center">
                 Book an Appointment
@@ -170,7 +187,7 @@ export default function Contact() {
                     {remainingChars}/{maxMessageLength}
                   </div>
                 </div>
-                <div className="mb-3 text-center">
+                <div className="text-center">
                   <button type="submit" className="btn btn-dark text-white">
                     Submit
                   </button>

@@ -54,7 +54,13 @@ const userSchema = new Schema({
   }
 });
 
-// set up pre-save middleware to create password
+// Pre-save middleware to convert email to lowercase
+userSchema.pre('save', function(next) {
+  this.email = this.email.toLowerCase();
+  next();
+});
+
+// Set up pre-save middleware to create password
 userSchema.pre('save', async function(next) {
   if (this.isNew || this.isModified('password')) {
     const saltRounds = 10;
@@ -64,7 +70,7 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
-// compare the incoming password with the hashed password
+// Compare the incoming password with the hashed password
 userSchema.methods.isCorrectPassword = async function(password) {
   return await bcrypt.compare(password, this.password);
 };

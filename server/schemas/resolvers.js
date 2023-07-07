@@ -4,7 +4,15 @@ const { signToken } = require("../utils/auth");
 
 const resolvers = {
     Query: {
-        
+        user: async () => {
+          return await User.find().populate('Appointments');
+        },
+        appointments: async () => {
+          return await Appointment.find().populate('user');
+        },
+        appointment: async () => {
+          return await Appointment.findById(id).populate('user');
+        }
     },
   Mutation: {
     addUser: async (parent, args) => {

@@ -12,6 +12,7 @@ import { setContext } from '@apollo/client/link/context';
 import Calendar from './components/Calendar';
 import EntryForm from './pages/EntryForm';
 import ClientAppointment from './components/ClientAppointment';
+import Dashboard from './pages/Dashboard';
 
 import './App.css';
 
@@ -45,7 +46,8 @@ function App() {
           <Routes>
             <Route path="/" element={<EntryForm />} />
             <Route path="/calendar" element={<Calendar />} />
-            <Route path='/appointment-setup' element={<ClientAppointment />} />
+            <Route path='/appointment' element={<ClientAppointment />} />
+            <Route path='/dashboard' element={<Dashboard/>} />
           </Routes>
         </div>
       </Router>

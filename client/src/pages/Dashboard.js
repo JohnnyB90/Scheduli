@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
-import Navbar from "../components/DashboardNav";
+import Navbar from '../components/DashboardNav';
 import Calendar from '../components/Calendar';
-import AccountSettingsPage from "../components/AccountSettings";
+import AccountSettings from "../components/AccountSettings";
+import PasswordSettings from '../components/PasswordSettings';
 
 
 function Dashboard() {
     const [navLinks] = useState([
         { name: "Calendar" },
-        { name: "Appointments" },
+        { name: "View Appointments" },
+        { name: "Create Appointment"},
         { name: "Telemetry" },
-        { name: "Account Settings" }
+        { name: "Account Settings" },
+        { name: "Password Settings" },
     ]);
 
     const [currentNav, setCurrentNav] = useState(navLinks[0]);
@@ -25,7 +28,9 @@ function Dashboard() {
                 {currentNav === navLinks[0] && <Calendar></Calendar>}
                 {currentNav === navLinks[1] && <></>}
                 {currentNav === navLinks[2] && <></>}
-                {currentNav === navLinks[3] && <AccountSettingsPage></AccountSettingsPage>}
+                {currentNav === navLinks[3] && <></>}
+                {currentNav === navLinks[4] && <AccountSettings></AccountSettings>}
+                {currentNav === navLinks[5] && <PasswordSettings></PasswordSettings>}
             </main>
         </div>
     )

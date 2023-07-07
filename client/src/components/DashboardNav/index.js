@@ -1,11 +1,10 @@
 import React from "react";
-import "./index.css"
 
 export default function Navbar({ navLinks = [], currentLink, setCurrentLink }) {
     return (
         <ul id="" className="">
             {navLinks.map((navLink) => (
-                <li key={navLink.name} className="nav-item">
+                <li key={navLink.name} className="">
                     <a
                         className={` ${currentLink === navLink ? 'active' : ''}`}
                         href={navLink.url}

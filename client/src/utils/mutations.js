@@ -13,17 +13,17 @@ export const LOGIN = gql`
 
 export const UPDATE_USER = gql`
   mutation updateUser(
-    $firstName: String
-    $lastName: String
-    $email: String
-    $password: String
-    $phoneNumber: String
-    $businessName: String
-    $businessAddress: String
-    $zipCode: String
-    $city: String
-    $state: String
-    $country: String
+    $firstName: String!
+    $lastName: String!
+    $email: String!
+    $password: String!
+    $phoneNumber: String!
+    $businessName: String!
+    $businessAddress: String!
+    $zipCode: String!
+    $city: String!
+    $state: String!
+    $country: String!
   ) {
     updateUser(
       firstName: $firstName
@@ -48,6 +48,13 @@ export const ADD_USER = gql`
     $lastName: String!
     $email: String!
     $password: String!
+    $phoneNumber: String!
+    $businessName: String!
+    $businessAddress: String!
+    $zipCode: String!
+    $city: String!
+    $state: String!
+    $country: String!
   ) {
     addUser(
       firstName: $firstName

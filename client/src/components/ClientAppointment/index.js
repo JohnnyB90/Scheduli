@@ -1,49 +1,77 @@
-import React, { useState } from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState, useRef } from "react";
+import DatePicker from "react-datepicker";
+import TimePicker from "react-time-picker";
+import "react-datepicker/dist/react-datepicker.css";
+import "react-time-picker/dist/TimePicker.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import dayjs from 'dayjs';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
+import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
+import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 
-export default function Contact() {
+export default function ClientAppointment() {
   const [formState, setFormState] = useState({
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
     message: "",
+    appointmentDate: null,
+    appointmentTime: null,
   });
 
   const maxMessageLength = 300;
   const [remainingChars, setRemainingChars] = useState(maxMessageLength);
 
-  const { firstName, lastName, email, phone, message } = formState;
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    message,
+    appointmentDate,
+    appointmentTime,
+  } = formState;
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
+  const [events, setEvents] = useState([]);
+
+  const dateDropdownRef = useRef(null);
+  const timeDropdownRef = useRef(null);
+
   function handleChange(event) {
     const { name, value } = event.target;
-
-    if (name === "phone") {
-      if (value.length > 10) {
-        setErrorMessage("Phone number must not exceed 10 digits.");
-        return;
-      } else if (value.length === 10 && !/^\d{10}$/.test(value)) {
-        setErrorMessage("Phone number must be exactly 10 digits.");
-        return;
-      } else {
-        setErrorMessage("");
-      }
-    }
-
-    if (name === "message") {
-      if (value.length > maxMessageLength) {
-        setErrorMessage("Message must not exceed 300 characters.");
-        return;
-      } else {
-        setRemainingChars(maxMessageLength - value.length);
-        setErrorMessage("");
-      }
-    }
-
     setFormState({ ...formState, [name]: value });
+  }
+
+  function handleDateChange(date) {
+    setFormState({ ...formState, appointmentDate: date });
+  }
+
+  function handleTimeChange(time) {
+    setFormState({ ...formState, appointmentTime: time });
+  }
+
+  function handleDateDropdownToggle() {
+    if (dateDropdownRef.current.classList.contains("show")) {
+      dateDropdownRef.current.classList.remove("show");
+    } else {
+      dateDropdownRef.current.classList.add("show");
+    }
+  }
+
+  function handleTimeDropdownToggle() {
+    if (timeDropdownRef.current.classList.contains("show")) {
+      timeDropdownRef.current.classList.remove("show");
+    } else {
+      timeDropdownRef.current.classList.add("show");
+    }
   }
 
   async function handleSubmit(event) {
@@ -67,6 +95,22 @@ export default function Contact() {
           setSuccessMessage("");
         }, 2000);
         setSubmitted(true);
+
+        // Add the form data to the calendar events
+        const eventData = await response.json();
+        const { id, firstName, lastName, start, end, message } = eventData;
+        const newEvent = {
+          id,
+          title: `${firstName} ${lastName}`,
+          start,
+          end,
+          name: firstName,
+          email: formState.email,
+          phone: formState.phone,
+          specialMessage: message,
+        };
+
+        setEvents((prevEvents) => [...prevEvents, newEvent]);
       } else {
         // Error sending email
         setErrorMessage("Error sending email");
@@ -82,7 +126,6 @@ export default function Contact() {
   }
 
   if (submitted) {
-    // setTimeout(() => {
     return (
       <section className="container">
         <div className="row justify-content-center m-3">
@@ -91,17 +134,23 @@ export default function Contact() {
               <h1 className="p-3">Your appointment has been scheduled!</h1>
             </div>
             <div className="card">
-              <h4 className="pt-3">Thank you, {firstName} {lastName}, for doing business with us.</h4>
+              <h4 className="pt-3">
+                Thank you, {firstName} {lastName}, for doing business with us.
+              </h4>
               <div className="p-3">
-                <p className="">A confirmation email has been sent to {email}.</p>
-                <p className="">If you find that you need to cancel or reschedule your appointment, please contact us via email or phone.</p>
+                <p className="">
+                  A confirmation email has been sent to {email}.
+                </p>
+                <p className="">
+                  If you find that you need to cancel or reschedule your
+                  appointment, please contact us via email or phone.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
     );
-    // }, 2000);
   }
 
   return (
@@ -171,6 +220,39 @@ export default function Contact() {
                   />
                 </div>
                 <div className="mb-3">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer
+                      components={[
+                        "DateTimePicker",
+                        "MobileDateTimePicker",
+                        "DesktopDateTimePicker",
+                        "StaticDateTimePicker",
+                      ]}
+                    >
+                      <DemoItem label="Desktop variant">
+                        <DesktopDateTimePicker
+                          defaultValue={dayjs("2022-04-17T15:30")}
+                        />
+                      </DemoItem>
+                      <DemoItem label="Mobile variant">
+                        <MobileDateTimePicker
+                          defaultValue={dayjs("2022-04-17T15:30")}
+                        />
+                      </DemoItem>
+                      <DemoItem label="Responsive variant">
+                        <DateTimePicker
+                          defaultValue={dayjs("2022-04-17T15:30")}
+                        />
+                      </DemoItem>
+                      <DemoItem label="Static variant">
+                        <StaticDateTimePicker
+                          defaultValue={dayjs("2022-04-17T15:30")}
+                        />
+                      </DemoItem>
+                    </DemoContainer>
+                  </LocalizationProvider>
+                </div>
+                <div className="mb-3">
                   <label htmlFor="message" className="form-label text-black">
                     Message
                   </label>
@@ -179,7 +261,7 @@ export default function Contact() {
                     id="message"
                     name="message"
                     rows="3"
-                    placeholder="Enter details your appointment."
+                    placeholder="Enter details of your appointment."
                     value={message}
                     onChange={handleChange}
                   ></textarea>

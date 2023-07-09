@@ -38,7 +38,7 @@ const userTypeDefs = gql`
       city: String!
       state: String!
       country: String!
-    ): Auth
+    ): User
     updateUser(
       _id: ID!
       email: String
@@ -50,7 +50,7 @@ const userTypeDefs = gql`
       city: String
       state: String
       country: String
-    ): User
+    ): Auth
     deleteUser(_id: ID!): User
     login(email: String!, password: String!): Auth
   }

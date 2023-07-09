@@ -4,6 +4,7 @@ const { User } = require('../../models');
 const { signToken } = require('../../utils/auth');
 
 router.post('/', async (req, res) => {
+  console.log('route posted');
   try {
     const {
       firstName,

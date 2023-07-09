@@ -8,7 +8,6 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 
-
 import Calendar from './components/Calendar';
 import EntryForm from './pages/EntryForm';
 import ClientAppointment from './components/ClientAppointment';

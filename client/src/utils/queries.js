@@ -27,8 +27,9 @@ export const GET_ONE_APPOINTMENT = gql`
 ;`
 
 export const QUERY_USER = gql`
-  {
+  query getUser{
     user {
+      _id
       firstName
       lastName
       email

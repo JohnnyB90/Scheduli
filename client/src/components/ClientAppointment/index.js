@@ -1,13 +1,21 @@
 import React, { useState } from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "react-datepicker/dist/react-datepicker.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+// import Timepicker from "../Timepicker/index.js";
+import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
-export default function Contact() {
+export default function ClientAppointment() {
   const [formState, setFormState] = useState({
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
     message: "",
+    appointmentDate: null,
+    appointmentTime: null,
   });
 
   const maxMessageLength = 300;
@@ -20,29 +28,6 @@ export default function Contact() {
 
   function handleChange(event) {
     const { name, value } = event.target;
-
-    if (name === "phone") {
-      if (value.length > 10) {
-        setErrorMessage("Phone number must not exceed 10 digits.");
-        return;
-      } else if (value.length === 10 && !/^\d{10}$/.test(value)) {
-        setErrorMessage("Phone number must be exactly 10 digits.");
-        return;
-      } else {
-        setErrorMessage("");
-      }
-    }
-
-    if (name === "message") {
-      if (value.length > maxMessageLength) {
-        setErrorMessage("Message must not exceed 300 characters.");
-        return;
-      } else {
-        setRemainingChars(maxMessageLength - value.length);
-        setErrorMessage("");
-      }
-    }
-
     setFormState({ ...formState, [name]: value });
   }
 
@@ -59,16 +44,13 @@ export default function Contact() {
       });
 
       if (response.ok) {
-        // Email sent successfully
         setSuccessMessage("Email sent successfully");
         setErrorMessage("");
-        // Clear success message after 4 seconds
         setTimeout(() => {
           setSuccessMessage("");
         }, 2000);
         setSubmitted(true);
       } else {
-        // Error sending email
         setErrorMessage("Error sending email");
         setSuccessMessage("");
       }
@@ -82,7 +64,6 @@ export default function Contact() {
   }
 
   if (submitted) {
-    // setTimeout(() => {
     return (
       <section className="container">
         <div className="row justify-content-center m-3">
@@ -91,17 +72,23 @@ export default function Contact() {
               <h1 className="p-3">Your appointment has been scheduled!</h1>
             </div>
             <div className="card">
-              <h4 className="pt-3">Thank you, {firstName} {lastName}, for doing business with us.</h4>
+              <h4 className="pt-3">
+                Thank you, {firstName} {lastName}, for doing business with us.
+              </h4>
               <div className="p-3">
-                <p className="">A confirmation email has been sent to {email}.</p>
-                <p className="">If you find that you need to cancel or reschedule your appointment, please contact us via email or phone.</p>
+                <p className="">
+                  A confirmation email has been sent to {email}.
+                </p>
+                <p className="">
+                  If you find that you need to cancel or reschedule your
+                  appointment, please contact us via email or phone.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
     );
-    // }, 2000);
   }
 
   return (
@@ -114,6 +101,7 @@ export default function Contact() {
                 Book an Appointment
               </h1>
               <form onSubmit={handleSubmit}>
+                {/* Form Inputs */}
                 <div className="mb-3">
                   <label htmlFor="firstName" className="form-label text-black">
                     First Name
@@ -171,6 +159,30 @@ export default function Contact() {
                   />
                 </div>
                 <div className="mb-3">
+                  <label
+                    htmlFor="appointmentDate"
+                    className="form-label text-black"
+                  >
+                    Appointment Date
+                  </label>
+                  <div>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer
+                        components={[
+                          "DatePicker",
+                          "TimePicker",
+                          "DateTimePicker",
+                          "DateRangePicker",
+                        ]}
+                      >
+                        <DemoItem>
+                          <DateTimePicker />
+                        </DemoItem>
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  </div>
+                </div>
+                <div className="mb-3">
                   <label htmlFor="message" className="form-label text-black">
                     Message
                   </label>
@@ -179,7 +191,7 @@ export default function Contact() {
                     id="message"
                     name="message"
                     rows="3"
-                    placeholder="Enter details your appointment."
+                    placeholder="Enter details of your appointment."
                     value={message}
                     onChange={handleChange}
                   ></textarea>
@@ -187,12 +199,14 @@ export default function Contact() {
                     {remainingChars}/{maxMessageLength}
                   </div>
                 </div>
+                {/* Submit Button */}
                 <div className="text-center">
                   <button type="submit" className="btn btn-dark text-white">
                     Submit
                   </button>
                 </div>
               </form>
+              {/* Success and Error Messages */}
               {successMessage && (
                 <div className="text-success mt-3 text-black text-bold text-center">
                   {successMessage}

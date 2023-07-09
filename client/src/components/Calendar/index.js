@@ -1,77 +1,86 @@
-import React, {Component} from 'react';
-import {DayPilot, DayPilotCalendar} from "@daypilot/daypilot-lite-react";
+import React, { useRef, useEffect, useState } from 'react';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import './calendar.css';
 
-class Calendar extends Component {
+export default function MyCalendar() {
+  const calendarRef = useRef(null);
+  const [events, setEvents] = useState([]);
 
-  constructor(props) {
-    super(props);
-    this.calendarRef = React.createRef();
-    this.state = {
-      viewType: "WorkWeek",
-      headerDateFormat: "dddd",
-      cellHeight: 40,
-      timeRangeSelectedHandling: "Enabled",
-      onTimeRangeSelected: async (args) => {
-        const modal = await DayPilot.Modal.prompt("Create a new event:", "Event 1");
-        const dp = args.control;
-        dp.clearSelection();
-        if (modal.canceled) { return; }
-        dp.events.add({
-          start: args.start,
-          end: args.end,
-          id: DayPilot.guid(),
-          text: modal.result
-        });
-      },
-      eventDeleteHandling: "Update",
-      onEventDeleted: (args) => {
-        console.log("Event deleted: " + args.e.text());
-      },
-      eventMoveHandling: "Disabled",
-      eventResizeHandling: "Disabled",
-      eventClickHandling: "Disabled",
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = () => {
+    fetch('/calendar-display')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Fetched events:', data);
+        setEvents(data);
+      })
+      .catch((error) => {
+        console.error('Error fetching events:', error);
+      });
+  };
+
+  const eventContent = ({ event }) => {
+    const handleEventClick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const details = `Name: ${event.extendedProps.name}\nEmail: ${event.extendedProps.email}\nPhone: ${event.extendedProps.phone}\n\n${event.extendedProps.specialMessage}`;
+      alert(details);
     };
-  }
 
-  componentDidMount() {
+    const handleDeleteClick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-    // load resource and event data
-    this.setState({
-      startDate: DayPilot.Date.today(),
-      events: [
-        {
-          id: 1,
-          text: "Event 1",
-          start: DayPilot.Date.today().addHours(10),
-          end: DayPilot.Date.today().addHours(14)
-        },
-        {
-          id: 2,
-          text: "Event 2",
-          start: "2022-06-02T10:00:00",
-          end: "2022-06-02T11:00:00",
-          barColor: "#38761d",
-          barBackColor: "#93c47d"
-        }
-      ]
-    });
+      // Make a DELETE request to delete the event on the backend
+      fetch(`/api/events/${event.id}`, {
+        method: 'DELETE',
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Event deleted on the backend:', data);
 
-  }
+          // Remove the event from the calendar
+          event.remove();
+        })
+        .catch((error) => {
+          console.error('Error deleting event on the backend:', error);
+        });
+    };
 
-  get calendar() {
-    return this.calendarRef.current.control;
-  }
-
-  render() {
     return (
-      <div>
-        <DayPilotCalendar
-          {...this.state}
-          ref={this.calendarRef}
-        />
+      <div className="event-content" onClick={handleEventClick}>
+        <div className="event-title">{event.title}</div>
+        <div className="event-delete" onClick={handleDeleteClick}>
+          X
+        </div>
       </div>
     );
-  }
-}
+  };
 
-export default Calendar;
+  const calendarConfig = {
+    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+    initialView: 'dayGridMonth',
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay',
+    },
+    events: events,
+    eventContent: eventContent,
+    slotMinTime: '08:00:00', // Set the minimum time to 8 am
+    slotMaxTime: '21:00:00', // Set the maximum time to 8 pm
+  };
+  
+
+  return (
+    <div className="calendar-container">
+      <FullCalendar {...calendarConfig} ref={calendarRef} />
+    </div>
+  );
+};

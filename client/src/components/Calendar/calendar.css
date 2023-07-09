@@ -1,0 +1,31 @@
+.event-content {
+	position: relative;
+  }
+  
+  .event-delete {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 2px;
+	cursor: pointer;
+  }
+  
+  .fc-timegrid {
+	height: calc(100vh - 115px); /* Adjust the height of the day and week views */
+  }
+  
+  .fc-daygrid-container {
+	height: auto !important; /* Reset the height for the month view */
+  }
+  
+  .calendar-container {
+	display: flex;
+	flex-direction: column;
+	height: calc(100vh - 200px); /* Adjust the overall height of the calendar */
+  }
+  
+  .fc-view-harness {
+	flex-grow: 1;
+	overflow: auto;
+  }
+  

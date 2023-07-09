@@ -1,17 +1,11 @@
-import React, { useState, useRef } from "react";
-import DatePicker from "react-datepicker";
-import TimePicker from "react-time-picker";
+import React, { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import "react-time-picker/dist/TimePicker.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import dayjs from 'dayjs';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
-import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
-import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
+// import Timepicker from "../Timepicker/index.js";
+import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
 export default function ClientAppointment() {
   const [formState, setFormState] = useState({
@@ -27,51 +21,14 @@ export default function ClientAppointment() {
   const maxMessageLength = 300;
   const [remainingChars, setRemainingChars] = useState(maxMessageLength);
 
-  const {
-    firstName,
-    lastName,
-    email,
-    phone,
-    message,
-    appointmentDate,
-    appointmentTime,
-  } = formState;
+  const { firstName, lastName, email, phone, message } = formState;
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  const [events, setEvents] = useState([]);
-
-  const dateDropdownRef = useRef(null);
-  const timeDropdownRef = useRef(null);
-
   function handleChange(event) {
     const { name, value } = event.target;
     setFormState({ ...formState, [name]: value });
-  }
-
-  function handleDateChange(date) {
-    setFormState({ ...formState, appointmentDate: date });
-  }
-
-  function handleTimeChange(time) {
-    setFormState({ ...formState, appointmentTime: time });
-  }
-
-  function handleDateDropdownToggle() {
-    if (dateDropdownRef.current.classList.contains("show")) {
-      dateDropdownRef.current.classList.remove("show");
-    } else {
-      dateDropdownRef.current.classList.add("show");
-    }
-  }
-
-  function handleTimeDropdownToggle() {
-    if (timeDropdownRef.current.classList.contains("show")) {
-      timeDropdownRef.current.classList.remove("show");
-    } else {
-      timeDropdownRef.current.classList.add("show");
-    }
   }
 
   async function handleSubmit(event) {
@@ -87,32 +44,13 @@ export default function ClientAppointment() {
       });
 
       if (response.ok) {
-        // Email sent successfully
         setSuccessMessage("Email sent successfully");
         setErrorMessage("");
-        // Clear success message after 4 seconds
         setTimeout(() => {
           setSuccessMessage("");
         }, 2000);
         setSubmitted(true);
-
-        // Add the form data to the calendar events
-        const eventData = await response.json();
-        const { id, firstName, lastName, start, end, message } = eventData;
-        const newEvent = {
-          id,
-          title: `${firstName} ${lastName}`,
-          start,
-          end,
-          name: firstName,
-          email: formState.email,
-          phone: formState.phone,
-          specialMessage: message,
-        };
-
-        setEvents((prevEvents) => [...prevEvents, newEvent]);
       } else {
-        // Error sending email
         setErrorMessage("Error sending email");
         setSuccessMessage("");
       }
@@ -163,6 +101,7 @@ export default function ClientAppointment() {
                 Book an Appointment
               </h1>
               <form onSubmit={handleSubmit}>
+                {/* Form Inputs */}
                 <div className="mb-3">
                   <label htmlFor="firstName" className="form-label text-black">
                     First Name
@@ -220,37 +159,28 @@ export default function ClientAppointment() {
                   />
                 </div>
                 <div className="mb-3">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer
-                      components={[
-                        "DateTimePicker",
-                        "MobileDateTimePicker",
-                        "DesktopDateTimePicker",
-                        "StaticDateTimePicker",
-                      ]}
-                    >
-                      <DemoItem label="Desktop variant">
-                        <DesktopDateTimePicker
-                          defaultValue={dayjs("2022-04-17T15:30")}
-                        />
-                      </DemoItem>
-                      <DemoItem label="Mobile variant">
-                        <MobileDateTimePicker
-                          defaultValue={dayjs("2022-04-17T15:30")}
-                        />
-                      </DemoItem>
-                      <DemoItem label="Responsive variant">
-                        <DateTimePicker
-                          defaultValue={dayjs("2022-04-17T15:30")}
-                        />
-                      </DemoItem>
-                      <DemoItem label="Static variant">
-                        <StaticDateTimePicker
-                          defaultValue={dayjs("2022-04-17T15:30")}
-                        />
-                      </DemoItem>
-                    </DemoContainer>
-                  </LocalizationProvider>
+                  <label
+                    htmlFor="appointmentDate"
+                    className="form-label text-black"
+                  >
+                    Appointment Date
+                  </label>
+                  <div>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer
+                        components={[
+                          "DatePicker",
+                          "TimePicker",
+                          "DateTimePicker",
+                          "DateRangePicker",
+                        ]}
+                      >
+                        <DemoItem>
+                          <DateTimePicker />
+                        </DemoItem>
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  </div>
                 </div>
                 <div className="mb-3">
                   <label htmlFor="message" className="form-label text-black">
@@ -269,12 +199,14 @@ export default function ClientAppointment() {
                     {remainingChars}/{maxMessageLength}
                   </div>
                 </div>
+                {/* Submit Button */}
                 <div className="text-center">
                   <button type="submit" className="btn btn-dark text-white">
                     Submit
                   </button>
                 </div>
               </form>
+              {/* Success and Error Messages */}
               {successMessage && (
                 <div className="text-success mt-3 text-black text-bold text-center">
                   {successMessage}

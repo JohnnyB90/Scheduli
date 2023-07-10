@@ -1,12 +1,10 @@
 require('dotenv').config();
 const router = require('express').Router();
 const nodeMailer = require('nodemailer');
-const debug = require('debug')('app:email');
 const cors = require('cors');
 const { Appointment } = require('../../models');
 
 router.use(cors());
-
 
 // Nodemailer setup
 let transporter = nodeMailer.createTransport({
@@ -22,13 +20,22 @@ let transporter = nodeMailer.createTransport({
 
 router.post('/', async (req, res) => {
   try {
-    const { email, firstName, lastName, phone, message } = req.body;
+    console.log(req.body);
+    const { email, firstName, lastName, appointmentDate, appointmentTime, phone, message } = req.body;
+
+    const timeFormat = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+    if (!appointmentTime.match(timeFormat)) {
+      return res.status(400).send({ error: 'Invalid time.' });
+    }
+    
 
     const newAppointment = await Appointment.create({
       firstName,
       lastName,
       email,
       phone,
+      appointmentDate,
+      appointmentTime,
       message,
     });
 
@@ -36,10 +43,11 @@ router.post('/', async (req, res) => {
       <html>
         <body>
           <h1>Appointment Details</h1>
-          <p>Name: ${firstName}${lastName}</p>
+          <p>Name: ${firstName} ${lastName}</p>
           <p>Email: ${email}</p>
           <p>Phone: ${phone}</p>
-          <p>Check-in Time: </p>
+          <p>Appointment Date: ${appointmentDate}</p>
+          <p>Appointment Time: ${appointmentTime}</p>
           <p>Message: ${message}</p>
         </body>
       </html>

@@ -1,4 +1,4 @@
 const userTypeDefs = require('./userTypeDefs');
-// const clientTypeDefs = require('./clientTypeDefs');
+const calendarTypeDefs = require('./calendarTypeDefs');
 
-module.exports = [userTypeDefs];
+module.exports = [userTypeDefs, calendarTypeDefs];

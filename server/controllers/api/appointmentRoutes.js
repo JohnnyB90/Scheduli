@@ -27,7 +27,6 @@ router.post('/', async (req, res) => {
     if (!appointmentTime.match(timeFormat)) {
       return res.status(400).send({ error: 'Invalid time.' });
     }
-    console.log(timeFormat);
 
     const newAppointment = await Appointment.create({
       firstName,

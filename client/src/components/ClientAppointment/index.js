@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-// import Timepicker from "../Timepicker/index.js";
 import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import dayjs from "dayjs";
 
 export default function ClientAppointment() {
   const [formState, setFormState] = useState({
@@ -14,33 +14,47 @@ export default function ClientAppointment() {
     email: "",
     phone: "",
     message: "",
-    appointmentDate: null,
-    appointmentTime: null,
+    dateTime: ""
   });
-
+  console.log({dateTime: formState.dateTime});
+  console.log(formState);
   const maxMessageLength = 300;
   const [remainingChars, setRemainingChars] = useState(maxMessageLength);
-
-  const { firstName, lastName, email, phone, message } = formState;
+  
+  const { firstName, lastName, email, phone, message, dateTime } = formState;
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
-
+  
   function handleChange(event) {
     const { name, value } = event.target;
-    setFormState({ ...formState, [name]: value });
+    if (name !== "dateTime") {
+      setFormState({ ...formState, [name]: value });
+    }
   }
-
+  
+  function handleDateTimeChange(dateTime) {
+    const formattedDate = dayjs(dateTime).format("MM/DD/YYYY");
+    const formattedTime = dayjs(dateTime).format("HH:mm");
+    setFormState({ firstName, lastName, email, phone, message, appointmentDate: formattedDate, appointmentTime: formattedTime });
+  }
+   console.log(formState.appointmentDate);
+   console.log(formState.appointmentTime);
+  
   async function handleSubmit(event) {
     event.preventDefault();
-
+  
+    // Create a copy of formState
+    let formToSend = { ...formState };
+  
     try {
+      console.log(formToSend);
       const response = await fetch("/api/appointment_details", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formState),
+        body: JSON.stringify(formToSend), // Send the updated form data
       });
 
       if (response.ok) {
@@ -160,7 +174,7 @@ export default function ClientAppointment() {
                 </div>
                 <div className="mb-3">
                   <label
-                    htmlFor="appointmentDate"
+                    htmlFor="appointmentDateTime"
                     className="form-label text-black"
                   >
                     Appointment Date
@@ -176,7 +190,13 @@ export default function ClientAppointment() {
                         ]}
                       >
                         <DemoItem>
-                          <DateTimePicker />
+                          <DateTimePicker
+                            value={dateTime}
+                            onChange={handleDateTimeChange}
+                            showTimeSelect
+                            timeformat="HH:mm"
+                            dateFormat="LLL"
+                          />
                         </DemoItem>
                       </DemoContainer>
                     </LocalizationProvider>

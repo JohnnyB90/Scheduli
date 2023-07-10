@@ -44,7 +44,7 @@ function App() {
         <div className="App">
           <Routes>
             <Route path="/" element={<EntryForm />} />
-            {/* <Route path="/calendar" element={<Calendar />} /> */}
+            <Route path="/calendar" element={<Calendar />} />
             <Route path='/appointment' element={<ClientAppointment />} />
             <Route path='/dashboard' element={<Dashboard/>} />
           </Routes>

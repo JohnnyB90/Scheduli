@@ -23,11 +23,11 @@ router.post('/', async (req, res) => {
     console.log(req.body);
     const { email, firstName, lastName, appointmentDate, appointmentTime, phone, message } = req.body;
 
-    const timeFormat = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+    const timeFormat = /^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/;
     if (!appointmentTime.match(timeFormat)) {
       return res.status(400).send({ error: 'Invalid time.' });
     }
-    
+    console.log(timeFormat);
 
     const newAppointment = await Appointment.create({
       firstName,
@@ -71,9 +71,9 @@ router.post('/', async (req, res) => {
       }
     });
   } catch (err) {
-    console.log('Error:', err);
-    res.status(500).json({ message: 'Error creating appointment' });
-  }
+    console.error('Error creating appointment', err);
+    res.status(500).json({ message: 'Error creating appointment', error: err.message });
+  }  
 });
 
 module.exports = router;

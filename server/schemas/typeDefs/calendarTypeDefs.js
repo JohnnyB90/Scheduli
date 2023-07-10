@@ -1,9 +1,13 @@
+// calendarTypeDefs.js
+
 const { gql } = require("apollo-server-express");
+
 const calendarTypeDefs = gql`
   type Query {
     appointments: [Appointment]
     appointment(id: ID!): Appointment
   }
+
   type Appointment {
     id: ID!
     firstName: String!
@@ -14,6 +18,7 @@ const calendarTypeDefs = gql`
     phone: String!
     message: String!
   }
+
   extend type Mutation {
     createAppointment(
       firstName: String!
@@ -26,13 +31,5 @@ const calendarTypeDefs = gql`
     ): Appointment!
   }
 `;
+
 module.exports = calendarTypeDefs;
-
-
-
-
-
-
-
-
-

@@ -9,6 +9,14 @@ const appointmentSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  appointmentDate: {
+    type: String,
+    required: true
+  },
+  appointmentTime: {
+    type: String,
+    required: true
+  },
   email: {
     type: String,
     required: true
@@ -22,6 +30,7 @@ const appointmentSchema = new mongoose.Schema({
     required: true
   }
 });
+
 
 const Appointment = mongoose.model('Appointment', appointmentSchema);
 

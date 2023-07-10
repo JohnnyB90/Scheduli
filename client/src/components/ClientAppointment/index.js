@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import dayjs from "dayjs";
+import { TextField } from "@mui/material";
+import format from "date-fns/format";
 
 export default function ClientAppointment() {
   const [formState, setFormState] = useState({
@@ -14,41 +15,42 @@ export default function ClientAppointment() {
     email: "",
     phone: "",
     message: "",
-    dateTime: ""
+    dateTime: "",
   });
-  console.log({dateTime: formState.dateTime});
-  console.log(formState);
+
   const maxMessageLength = 300;
   const [remainingChars, setRemainingChars] = useState(maxMessageLength);
-  
+
   const { firstName, lastName, email, phone, message, dateTime } = formState;
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  
+
   function handleChange(event) {
     const { name, value } = event.target;
     if (name !== "dateTime") {
       setFormState({ ...formState, [name]: value });
     }
   }
-  
-  function handleDateTimeChange(dateTime) {
-    const formattedDate = dayjs(dateTime).format("MM/DD/YYYY");
-    const formattedTime = dayjs(dateTime).format("HH:mm");
-    setFormState({ firstName, lastName, email, phone, message, appointmentDate: formattedDate, appointmentTime: formattedTime });
+
+  function handleDateTimeChange(value) {
+    const formattedDate = format(value, "MM/dd/yyyy");
+    const formattedTime = format(value, "HH:mm");
+    setFormState((prevState) => ({
+      ...prevState,
+      dateTime: value,
+      appointmentDate: formattedDate,
+      appointmentTime: formattedTime,
+    }));
   }
-   console.log(formState.appointmentDate);
-   console.log(formState.appointmentTime);
-  
+
   async function handleSubmit(event) {
     event.preventDefault();
-  
+
     // Create a copy of formState
     let formToSend = { ...formState };
-  
+
     try {
-      console.log(formToSend);
       const response = await fetch("/api/appointment_details", {
         method: "POST",
         headers: {
@@ -180,26 +182,29 @@ export default function ClientAppointment() {
                     Appointment Date
                   </label>
                   <div>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer
-                        components={[
-                          "DatePicker",
-                          "TimePicker",
-                          "DateTimePicker",
-                          "DateRangePicker",
-                        ]}
-                      >
-                        <DemoItem>
-                          <DateTimePicker
-                            value={dateTime}
-                            onChange={handleDateTimeChange}
-                            showTimeSelect
-                            timeformat="HH:mm"
-                            dateFormat="LLL"
-                          />
-                        </DemoItem>
-                      </DemoContainer>
-                    </LocalizationProvider>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DemoContainer
+                      components={[
+                        "DatePicker",
+                        "TimePicker",
+                        "DateTimePicker",
+                        "DateRangePicker",
+                      ]}
+                    >
+                      <DemoItem>
+                        <DateTimePicker
+                          renderInput={(props) => (
+                            <TextField
+                              {...props}
+                              label="Appointment Date and Time"
+                            />
+                          )}
+                          value={dateTime}
+                          onChange={handleDateTimeChange}
+                        />
+                      </DemoItem>
+                    </DemoContainer>
+                  </LocalizationProvider>
                   </div>
                 </div>
                 <div className="mb-3">

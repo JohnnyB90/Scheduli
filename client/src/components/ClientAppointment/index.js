@@ -35,7 +35,7 @@ export default function ClientAppointment() {
 
   function handleDateTimeChange(value) {
     const formattedDate = format(value, "MM/dd/yyyy");
-    const formattedTime = format(value, "HH:mm");
+    const formattedTime = format(value, "hh:mm a");
     setFormState((prevState) => ({
       ...prevState,
       dateTime: value,
@@ -43,6 +43,8 @@ export default function ClientAppointment() {
       appointmentTime: formattedTime,
     }));
   }
+  
+  
 
   async function handleSubmit(event) {
     event.preventDefault();

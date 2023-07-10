@@ -34,6 +34,7 @@ export default function ClientAppointment() {
   }
 
   function handleDateTimeChange(value) {
+    const currentDate = new Date();
     const formattedDate = format(value, "MM/dd/yyyy");
     const formattedTime = format(value, "hh:mm a");
     setFormState((prevState) => ({
@@ -203,6 +204,7 @@ export default function ClientAppointment() {
                           )}
                           value={dateTime}
                           onChange={handleDateTimeChange}
+                          minDate={new Date()}
                         />
                       </DemoItem>
                     </DemoContainer>

@@ -21,6 +21,8 @@ export default function AccountSettings() {
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
+    const [updateUser] = useMutation(UPDATE_USER);
+
     function handleChange(event) {
         const { name, value } = event.target;
 
@@ -53,15 +55,23 @@ export default function AccountSettings() {
         event.preventDefault();
 
         try {
-            const response = await fetch("/api/account_settings", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formState),
+            const { data } = await updateUser({
+                variables: {
+                    firstName,
+                    lastName,
+                    email,
+                    password: "", // Pass the password if needed
+                    phoneNumber,
+                    businessName,
+                    businessAddress,
+                    zipCode,
+                    city,
+                    state,
+                    country
+                }
             });
 
-            if (response.ok) {
+            if (data.ok) {
                 setSuccessMessage("Your account settings have been updated.");
                 setErrorMessage("");
                 setTimeout(() => {

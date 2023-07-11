@@ -6,6 +6,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { TextField } from "@mui/material";
+import InputMask from "react-input-mask";
 import format from "date-fns/format";
 
 export default function ClientAppointment() {
@@ -191,16 +192,24 @@ export default function ClientAppointment() {
                   <label htmlFor="phone" className="form-label text-black">
                     Phone number
                   </label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    id="phone"
-                    name="phone"
-                    placeholder="Phone number"
+                  <InputMask
+                    mask="(999)-999-9999"
+                    maskChar=" "
                     value={phone}
                     onChange={handleChange}
-                  />
+                  >
+                    {() => (
+                      <input
+                        type="text"
+                        id="phone"
+                        name="phone"
+                        placeholder="(999)-999-9999"
+                        className="form-control" // Move form-control here
+                      />
+                    )}
+                  </InputMask>
                 </div>
+
                 <div className="mb-3">
                   <label
                     htmlFor="appointmentDateTime"

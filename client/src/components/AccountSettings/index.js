@@ -70,8 +70,9 @@ export default function AccountSettings() {
                     country
                 }
             });
+            console.log(data);
 
-            if (data.ok) {
+            if (data) {
                 setSuccessMessage("Your account settings have been updated.");
                 setErrorMessage("");
                 setTimeout(() => {

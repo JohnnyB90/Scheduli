@@ -33,8 +33,8 @@ export default function PasswordSettings() {
         event.preventDefault();
 
         try { // use mutation
-        // Password change logic
-        // ...
+            // Password change logic
+            // ...
 
         setSuccessMessage("Password successfully updated.");
         setFormState({

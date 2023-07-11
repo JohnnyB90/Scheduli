@@ -23,10 +23,26 @@ const resolvers = {
     },
     updateUser: async (parent, args, context) => {
       if (context.user) {
-        return await User.findByIdAndUpdate(context.user._id, args, { new: true });
+        // Create a new object to store the updated fields
+        const updatedFields = {};
+    
+        // Iterate over the fields in args
+        for (const field in args) {
+          // Check if the field value is not an empty string
+          if (args[field] !== '') {
+            // Add the field and its value to the updatedFields object
+            updatedFields[field] = args[field];
+          }
+        }
+    
+        // Perform the update only if there are non-empty fields to update
+        if (Object.keys(updatedFields).length > 0) {
+          return await User.findByIdAndUpdate(context.user._id, updatedFields, { new: true });
+        } else {
+          // If there are no non-empty fields to update, return the existing user
+          return context.user;
+        }
       }
-
-      throw new AuthenticationError('You need to be logged in!');
     },
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });

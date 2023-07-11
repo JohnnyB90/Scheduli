@@ -55,6 +55,11 @@ const userTypeDefs = gql`
     ): User
     deleteUser(_id: ID!): User
     login(email: String!, password: String!): Auth
+    updatePassword(
+      currentPassword: String!
+      newPassword: String!
+      confirmPassword: String!
+    ): User
   }
 `;
 

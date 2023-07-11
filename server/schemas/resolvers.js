@@ -60,8 +60,26 @@ const resolvers = {
       const token = signToken(user);
 
       return { token, user };
-    }
-  }
+    },
+    updatePassword: async (parent, args, context) => {
+      const { currentPassword, newPassword, confirmPassword } = args;
+      
+      if (newPassword !== confirmPassword) {
+        throw new Error('Passwords do not match');
+      }
+
+      const user = await User.findById(context.user._id);
+
+      if (user.password !== currentPassword) {
+        throw new Error('Current password is incorrect');
+      }
+
+      user.password = newPassword;
+      await user.save();
+
+      return user;
+    },
+  },
 };
 
 module.exports = resolvers;

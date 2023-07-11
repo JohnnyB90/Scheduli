@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useMutation } from '@apollo/client';
 import { UPDATE_USER } from '../../utils/mutations';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function AccountSettings() {
     const [formState, setFormState] = useState({

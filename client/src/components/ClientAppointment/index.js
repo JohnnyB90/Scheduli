@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
@@ -10,22 +10,49 @@ import format from "date-fns/format";
 import './style.css'
 
 export default function ClientAppointment() {
+  const currentDate = new Date();
+  const hours = currentDate.getHours();
+  const isAM = hours < 12 ? true : false;
+  // Set initial dateTime to 12 AM or 12 PM based on current time
+  const initialDateTime = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDate.getDate(),
+    isAM ? 0 : 12
+  );
   const [formState, setFormState] = useState({
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
     message: "",
-    dateTime: "",
+    dateTime: initialDateTime,
   });
 
   const maxMessageLength = 300;
   const [remainingChars, setRemainingChars] = useState(maxMessageLength);
-
   const { firstName, lastName, email, phone, message, dateTime } = formState;
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    const now = new Date();
+    const currentHours = now.getHours();
+    const selectedDate = new Date(dateTime);
+    const selectedHours = selectedDate.getHours();
+
+    // Check if the selected time is AM while the current time is PM
+    if (selectedHours < 12 && currentHours >= 12) {
+      // Reset the dateTime state
+      setFormState((prevState) => ({
+        ...prevState,
+        dateTime: "",
+        appointmentDate: "",
+        appointmentTime: "",
+      }));
+    }
+  }, [dateTime]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -35,7 +62,6 @@ export default function ClientAppointment() {
   }
 
   function handleDateTimeChange(value) {
-    const currentDate = new Date();
     const formattedDate = format(value, "MM/dd/yyyy");
     const formattedTime = format(value, "hh:mm a");
     setFormState((prevState) => ({
@@ -45,8 +71,6 @@ export default function ClientAppointment() {
       appointmentTime: formattedTime,
     }));
   }
-
-
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -199,19 +223,46 @@ export default function ClientAppointment() {
                           "DateRangePicker",
                         ]}
                       >
-                        <DemoItem>
-                          <DateTimePicker
-                            renderInput={(props) => (
-                              <TextField
-                                {...props}
-                                label="Appointment Date and Time"
-                              />
-                            )}
-                            value={dateTime}
-                            onChange={handleDateTimeChange}
-                            minDate={new Date()}
-                          />
-                        </DemoItem>
+                        <DateTimePicker
+                          renderInput={(props) => (
+                            <TextField
+                              {...props}
+                              label="Appointment Date and Time"
+                            />
+                          )}
+                          value={dateTime}
+                          onChange={handleDateTimeChange}
+                          minDate={new Date()}
+                          shouldDisableTime={(time, viewType) => {
+                            // If we're looking at days, there's no need to check.
+                            if (
+                              viewType === "hours" ||
+                              viewType === "minutes"
+                            ) {
+                              const now = new Date();
+                              const currentHours = now.getHours();
+                              const currentMinutes = now.getMinutes();
+                              const currentDay = now.getDate();
+                              const selectedDate = dateTime.getDate();
+
+                              if (currentDay === selectedDate) {
+                                // If the current time is past 11 AM, disable each hour in the AM
+                                if (currentHours >= 11) {
+                                  return time.value < 12 * 60;
+                                } else {
+                                  // If the current time is before 11 AM, disable past hours and minutes
+                                  return (
+                                    time.value <
+                                    currentHours * 60 + currentMinutes
+                                  );
+                                }
+                              }
+                            }
+
+                            return false;
+                          }}
+                          disablePast
+                        />
                       </DemoContainer>
                     </LocalizationProvider>
                   </div>

@@ -6,3 +6,42 @@
     box-sizing: border-box;
   }
    */
+
+.appt-text {
+  color: #4f200d;
+}
+
+.appt-container {
+  background-color: #E5BA73;
+  border-radius: 2.5%;
+}
+
+.appt-button {
+  background-color: #4A403A;
+  color: #FFF4E0;
+}
+
+.appt-background {
+  background-color: #FFF2CC;
+}
+
+.conf-container {
+  background-color: #E5BA73;
+}
+
+.conf-header {
+  color: #4f200d;
+  background-color: #FFF2CC;
+}
+
+.conf-header-container {
+  background-color: #4A403A;
+}
+
+.conf-background {
+  background-color: #FFF2CC;
+}
+
+.conf-body {
+  background-color: #E5BA73;
+}

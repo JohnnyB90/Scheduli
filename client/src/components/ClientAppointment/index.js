@@ -7,6 +7,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { TextField } from "@mui/material";
 import format from "date-fns/format";
+import './style.css'
 
 export default function ClientAppointment() {
   const currentDate = new Date();
@@ -111,21 +112,25 @@ export default function ClientAppointment() {
       <section className="container">
         <div className="row justify-content-center m-3">
           <div className="col-md-6 col-lg-8">
-            <div className="m-3">
-              <h1 className="p-3">Your appointment has been scheduled!</h1>
+            <div className="p-2 m-3 conf-header-container">
+              <h1 className="p-3 m-0 conf-header">Your appointment has been scheduled!</h1>
             </div>
-            <div className="card">
-              <h4 className="pt-3">
-                Thank you, {firstName} {lastName}, for doing business with us.
-              </h4>
-              <div className="p-3">
-                <p className="">
-                  A confirmation email has been sent to {email}.
-                </p>
-                <p className="">
-                  If you find that you need to cancel or reschedule your
-                  appointment, please contact us via email or phone.
-                </p>
+            <div className="">
+              <div className="m-3 card conf-container">
+                <div className="m-3 conf-background">
+                  <h4 className="pt-3 appt-text">
+                    Thank you, {firstName} {lastName}, for doing business with us.
+                  </h4>
+                  <div className="p-3">
+                    <p className="appt-text">
+                      A confirmation email has been sent to {email}.
+                    </p>
+                    <p className="appt-text">
+                      If you find that you need to cancel or reschedule your
+                      appointment, please contact us via email or phone.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -136,17 +141,17 @@ export default function ClientAppointment() {
 
   return (
     <section className="container">
-      <div className="row justify-content-center">
+      <div className="row justify-content-center m-3">
         <div className="col-md-6 col-lg-8">
-          <div className="card m-3" id="header-color">
-            <div className="card-body p-5 contact-form">
-              <h1 className="card-title text-Black text-center">
-                Book an Appointment with us!
+          <div className="p-2 m-3 appt-container" id="header-color">
+            <div className="m-3 p-5 appt-background">
+              <h1 className="text-center appt-text">
+                Book an Appointment
               </h1>
-              <form onSubmit={handleSubmit}>
+              <form className="mt-3" onSubmit={handleSubmit}>
                 {/* Form Inputs */}
                 <div className="mb-3">
-                  <label htmlFor="firstName" className="form-label text-black">
+                  <label htmlFor="firstName" className="form-label appt-text">
                     First Name
                   </label>
                   <input
@@ -160,7 +165,7 @@ export default function ClientAppointment() {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="lastName" className="form-label text-black">
+                  <label htmlFor="lastName" className="form-label appt-text">
                     Last Name
                   </label>
                   <input
@@ -174,7 +179,7 @@ export default function ClientAppointment() {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="email" className="form-label text-black">
+                  <label htmlFor="email" className="form-label appt-text">
                     Email address
                   </label>
                   <input
@@ -188,7 +193,7 @@ export default function ClientAppointment() {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="phone" className="form-label text-black">
+                  <label htmlFor="phone" className="form-label appt-text">
                     Phone number
                   </label>
                   <input
@@ -204,7 +209,7 @@ export default function ClientAppointment() {
                 <div className="mb-3">
                   <label
                     htmlFor="appointmentDateTime"
-                    className="form-label text-black"
+                    className="form-label appt-text"
                   >
                     Appointment Date
                   </label>
@@ -263,7 +268,7 @@ export default function ClientAppointment() {
                   </div>
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="message" className="form-label text-black">
+                  <label htmlFor="message" className="form-label appt-text">
                     Message
                   </label>
                   <textarea
@@ -275,13 +280,12 @@ export default function ClientAppointment() {
                     value={message}
                     onChange={handleChange}
                   ></textarea>
-                  <div className="text-right text-white">
+                  <div className="text-right appt-text">
                     {remainingChars}/{maxMessageLength}
                   </div>
                 </div>
-                {/* Submit Button */}
-                <div className="text-center">
-                  <button type="submit" className="btn btn-dark text-white">
+                <div className="mt-3 text-center">
+                  <button type="submit" className="btn appt-button">
                     Submit
                   </button>
                 </div>

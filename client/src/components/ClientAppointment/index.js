@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";

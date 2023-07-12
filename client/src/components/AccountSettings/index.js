@@ -3,6 +3,7 @@ import { useMutation } from '@apollo/client';
 import { UPDATE_USER } from '../../utils/mutations';
 import './style.css';
 
+
 export default function AccountSettings() {
     const [formState, setFormState] = useState({
         firstName: "",

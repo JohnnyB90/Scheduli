@@ -110,7 +110,7 @@ export default function PasswordSettings() {
                                 />
                             </div>
                             <div className="d-grid gap-2">
-                                <button type="submit" className="btn pw-button">
+                                <button type="submit" className="custom-btn pw-button">
                                     Change Password
                                 </button>
                             </div>

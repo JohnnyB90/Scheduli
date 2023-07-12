@@ -110,7 +110,7 @@ export default function ClientAppointment() {
   
         // Redirect to calendar route after 2 seconds
         setTimeout(() => {
-          navigate('/calendar');
+          navigate('/dashboard');
         }, 2000);
       }
     } catch (error) {
@@ -278,7 +278,7 @@ export default function ClientAppointment() {
                   </div>
                 </div>
                 <div className="mt-3 text-center">
-                  <button type="submit" className="btn appt-button">
+                  <button type="submit" className="custom-btn appt-button">
                     Submit
                   </button>
                 </div>

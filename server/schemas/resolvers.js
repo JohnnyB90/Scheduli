@@ -9,10 +9,10 @@ const resolvers = {
       return await User.find().populate("Appointments");
     },
     appointments: async () => {
-      return await Appointment.find().populate("user");
+      return await Appointment.find();
     },
-    appointment: async (_, { id }) => {
-      return await Appointment.findById(id).populate("user");
+    appointment: async (_, { _id }) => {
+      return await Appointment.findById(_id);
     },
   },
   Mutation: {

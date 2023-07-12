@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useMutation } from '@apollo/client';
 import { UPDATE_USER } from '../../utils/mutations';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import './style.css';
+
 
 export default function AccountSettings() {
     const [formState, setFormState] = useState({
@@ -103,16 +104,16 @@ export default function AccountSettings() {
 
     return (
         <section className="container">
-            <div className="row">
+            <div className="my-3 row justify-content-center">
                 <div className="col-md-6 col-sm-12">
-                    <div className="card" id="settings-color"> 
-                        <div className="card-body p-5 account-settings-form">
-                            <h1 className="card-title text-Black text-center">
+                    <div className="card acc-border" id="settings-color"> 
+                        <div className=" m-3 p-5 account-settings-form acc-background">
+                            <h1 className="card-title acc-text text-center">
                                 Account Settings
                                 </h1>
                             <form onSubmit={handleSubmit}>    
                                 <div className="mb-3">
-                                    <label htmlFor="firstName" className="form-label text-black">
+                                    <label htmlFor="firstName" className="form-label acc-text">
                                         First Name
                                         </label>
                                     <input
@@ -125,7 +126,7 @@ export default function AccountSettings() {
                                     />
                                 </div>
                                 <div className="mb-3">
-                                    <label htmlFor="lastName" className="form-label text-black">
+                                    <label htmlFor="lastName" className="form-label acc-text">
                                         Last Name
                                         </label>
                                     <input
@@ -138,7 +139,7 @@ export default function AccountSettings() {
                                     />
                                 </div>
                                 <div className="mb-3">
-                                    <label htmlFor="email" className="form-label text-black">
+                                    <label htmlFor="email" className="form-label acc-text">
                                         Email
                                         </label>
                                     <input
@@ -151,7 +152,7 @@ export default function AccountSettings() {
                                     />
                                 </div>
                                 <div className="mb-3">
-                                    <label htmlFor="phoneNumber" className="form-label text-black">
+                                    <label htmlFor="phoneNumber" className="form-label acc-text">
                                         Phone Number
                                         </label>
                                     <input
@@ -164,7 +165,7 @@ export default function AccountSettings() {
                                     />
                                 </div>
                                 <div className="mb-3">
-                                    <label htmlFor="businessName" className="form-label text-black">
+                                    <label htmlFor="businessName" className="form-label acc-text">
                                         Business Name
                                         </label>
                                     <input
@@ -177,7 +178,7 @@ export default function AccountSettings() {
                                     />
                                 </div>
                                 <div className="mb-3">
-                                    <label htmlFor="businessAddress" className="form-label text-black">
+                                    <label htmlFor="businessAddress" className="form-label acc-text">
                                         Business Address
                                         </label>
                                     <input
@@ -190,7 +191,7 @@ export default function AccountSettings() {
                                     />
                                 </div>
                                 <div className="mb-3">
-                                    <label htmlFor="zipCode" className="form-label text-black">
+                                    <label htmlFor="zipCode" className="form-label acc-text">
                                         Zip Code
                                         </label>
                                     <input
@@ -203,7 +204,7 @@ export default function AccountSettings() {
                                     />
                                 </div>
                                 <div className="mb-3">
-                                    <label htmlFor="city" className="form-label text-black">
+                                    <label htmlFor="city" className="form-label acc-text">
                                         City
                                         </label>
                                     <input
@@ -216,7 +217,7 @@ export default function AccountSettings() {
                                     />
                                 </div>
                                 <div className="mb-3">
-                                    <label htmlFor="state" className="form-label text-black">
+                                    <label htmlFor="state" className="form-label acc-text">
                                         State
                                         </label>
                                     <input
@@ -229,7 +230,7 @@ export default function AccountSettings() {
                                     />
                                 </div>
                                 <div className="mb-3">
-                                    <label htmlFor="country" className="form-label text-black">
+                                    <label htmlFor="country" className="form-label acc-text">
                                         Country
                                         </label>
                                     <input
@@ -242,7 +243,7 @@ export default function AccountSettings() {
                                     />
                                 </div>
                                 <div className="d-grid gap-2">
-                                    <button type="submit" className="btn btn-dark text-white">
+                                    <button type="submit" className="btn acc-button">
                                         Update Account Settings
                                         </button>
                                 </div>

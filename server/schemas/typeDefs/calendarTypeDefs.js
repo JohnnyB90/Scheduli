@@ -1,19 +1,19 @@
-// calendarTypeDefs.js
-
 const { gql } = require("apollo-server-express");
 
 const calendarTypeDefs = gql`
+  scalar DateTime
+
   type Query {
     appointments: [Appointment]
-    appointment(id: ID!): Appointment
+    appointment(_id: ID!): Appointment
   }
 
   type Appointment {
-    id: ID!
+    _id: ID!
     firstName: String!
     lastName: String!
-    date: String!
-    time: String!
+    appointmentDate: String!
+    appointmentTime: String!
     email: String!
     phone: String!
     message: String!
@@ -23,12 +23,14 @@ const calendarTypeDefs = gql`
     createAppointment(
       firstName: String!
       lastName: String!
-      date: String!
-      time: String!
+      appointmentDate: String!
+      appointmentTime: String!
       email: String!
       phone: String!
       message: String!
     ): Appointment!
+
+    deleteAppointment(_id: ID!): Appointment
   }
 `;
 

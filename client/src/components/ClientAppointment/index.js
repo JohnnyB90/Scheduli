@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { useMutation } from '@apollo/client';
+import { CREATE_APPOINTMENT } from '../../utils/mutations';
 import { TextField } from "@mui/material";
+import InputMask from "react-input-mask";
 import format from "date-fns/format";
 import './style.css'
 
@@ -13,7 +15,6 @@ export default function ClientAppointment() {
   const currentDate = new Date();
   const hours = currentDate.getHours();
   const isAM = hours < 12 ? true : false;
-  // Set initial dateTime to 12 AM or 12 PM based on current time
   const initialDateTime = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth(),
@@ -29,12 +30,17 @@ export default function ClientAppointment() {
     dateTime: initialDateTime,
   });
 
+  // const appointmentDateTime = new Date(appointment.appointmentDateTime);
+  // const date = appointmentDateTime.toLocaleDateString(); // e.g., "01/09/2010"
+  // const time = appointmentDateTime.toLocaleTimeString(); // e.g., "12:30:00 PM"
   const maxMessageLength = 300;
   const [remainingChars, setRemainingChars] = useState(maxMessageLength);
   const { firstName, lastName, email, phone, message, dateTime } = formState;
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  
+  const [createAppointment] = useMutation(CREATE_APPOINTMENT);
 
   useEffect(() => {
     const now = new Date();
@@ -42,9 +48,7 @@ export default function ClientAppointment() {
     const selectedDate = new Date(dateTime);
     const selectedHours = selectedDate.getHours();
 
-    // Check if the selected time is AM while the current time is PM
     if (selectedHours < 12 && currentHours >= 12) {
-      // Reset the dateTime state
       setFormState((prevState) => ({
         ...prevState,
         dateTime: "",
@@ -75,32 +79,34 @@ export default function ClientAppointment() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    // Create a copy of formState
-    let formToSend = { ...formState };
+    const { firstName, lastName, email, phone, message, dateTime } = formState;
+    const formattedDate = format(dateTime, "MM/dd/yyyy");
+    const formattedTime = format(dateTime, "hh:mm a");
 
-    try {
-      const response = await fetch("/api/appointment_details", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formToSend), // Send the updated form data
+     try {
+      const { data } = await createAppointment({
+        variables: {
+          firstName,
+          lastName,
+          appointmentDate: formattedDate,
+          appointmentTime: formattedTime,
+          email,
+          phone,
+          message
+        }
       });
 
-      if (response.ok) {
-        setSuccessMessage("Email sent successfully");
+      if (data) {
+        setSuccessMessage("Appointment created successfully");
         setErrorMessage("");
         setTimeout(() => {
           setSuccessMessage("");
         }, 2000);
         setSubmitted(true);
-      } else {
-        setErrorMessage("Error sending email");
-        setSuccessMessage("");
       }
     } catch (error) {
-      console.error("Error sending email", error);
-      setErrorMessage("Error sending email");
+      console.error("Error creating appointment", error);
+      setErrorMessage("Error creating appointment");
       setSuccessMessage("");
     }
 
@@ -196,16 +202,24 @@ export default function ClientAppointment() {
                   <label htmlFor="phone" className="form-label appt-text">
                     Phone number
                   </label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    id="phone"
-                    name="phone"
-                    placeholder="Phone number"
+                  <InputMask
+                    mask="(999)-999-9999"
+                    maskChar=" "
                     value={phone}
                     onChange={handleChange}
-                  />
+                  >
+                    {() => (
+                      <input
+                        type="text"
+                        id="phone"
+                        name="phone"
+                        placeholder="(999)-999-9999"
+                        className="form-control" // Move form-control here
+                      />
+                    )}
+                  </InputMask>
                 </div>
+
                 <div className="mb-3">
                   <label
                     htmlFor="appointmentDateTime"

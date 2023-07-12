@@ -6,6 +6,8 @@ export const GET_ALL_APPOINTMENTS = gql`
       _id
       firstName
       lastName
+      appointmentDate
+      appointmentTime
       email
       phone
       message
@@ -14,11 +16,13 @@ export const GET_ALL_APPOINTMENTS = gql`
 ;`
 
 export const GET_ONE_APPOINTMENT = gql`
-  {
-    appointment(id: $appointmentId) {
+  query appointment($id: ID!) {
+    appointment(_id: $id) {
       _id
       firstName
       lastName
+      appointmentDate
+      appointmentTime
       email
       phone
       message

@@ -1,12 +1,13 @@
 import React from "react";
+import './style.css';
 
 export default function Navbar({ navLinks = [], currentLink, setCurrentLink }) {
     return (
-        <ul id="" className="">
+        <ul id="" className="nav nav-tabs nav-background justify-content-center">
             {navLinks.map((navLink) => (
-                <li key={navLink.name} className="">
+                <li key={navLink.name} className="nav-item">
                     <a
-                        className={` ${currentLink === navLink ? 'active' : ''}`}
+                        className={`nav-link  nav-text${currentLink === navLink ? 'active' : ''}`}
                         href={navLink.url}
                         onClick={() => {
                             setCurrentLink(navLink);

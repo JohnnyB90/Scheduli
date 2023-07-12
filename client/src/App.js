@@ -12,6 +12,7 @@ import Calendar from './components/Calendar';
 import EntryForm from './pages/EntryForm';
 import ClientAppointment from './components/ClientAppointment';
 import Dashboard from './pages/Dashboard';
+import AdminAppointment from './components/AdminAppointment';
 
 import './App.css';
 
@@ -46,6 +47,7 @@ function App() {
             <Route path="/" element={<EntryForm />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path='/appointment' element={<ClientAppointment />} />
+            <Route path='/admin-appointment' element={<AdminAppointment/>} />
             <Route path='/dashboard' element={<Dashboard/>} />
           </Routes>
         </div>

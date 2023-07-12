@@ -3,6 +3,7 @@ import Navbar from '../components/DashboardNav';
 import Calendar from '../components/Calendar';
 import AccountSettings from "../components/AccountSettings";
 import PasswordSettings from '../components/PasswordSettings';
+import AdminAppointment from '../components/AdminAppointment';
 
 
 function Dashboard() {
@@ -27,7 +28,7 @@ function Dashboard() {
             <main>
                 {currentNav === navLinks[0] && <Calendar></Calendar>}
                 {currentNav === navLinks[1] && <></>}
-                {currentNav === navLinks[2] && <></>}
+                {currentNav === navLinks[2] && <AdminAppointment></AdminAppointment>}
                 {currentNav === navLinks[3] && <></>}
                 {currentNav === navLinks[4] && <AccountSettings></AccountSettings>}
                 {currentNav === navLinks[5] && <PasswordSettings></PasswordSettings>}

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Auth from '../../utils/auth';
 import { useMutation } from '@apollo/client';
 import { LOGIN } from '../../utils/mutations';
-// import { redirect } from 'react-router-dom';
 
 function LoginForm() {
     const [formState, setFormState] = useState({ email: '', password: '' });

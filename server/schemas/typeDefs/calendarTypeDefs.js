@@ -29,7 +29,6 @@ const calendarTypeDefs = gql`
       phone: String!
       message: String!
     ): Appointment!
-
     deleteAppointment(_id: ID!): Appointment
   }
 `;

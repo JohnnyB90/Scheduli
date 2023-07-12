@@ -4,12 +4,12 @@ import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { useMutation } from '@apollo/client';
-import { CREATE_APPOINTMENT } from '../../utils/mutations';
+import { useMutation } from "@apollo/client";
+import { CREATE_APPOINTMENT } from "../../utils/mutations";
 import { TextField } from "@mui/material";
 import InputMask from "react-input-mask";
 import format from "date-fns/format";
-import './style.css'
+import "./style.css";
 
 export default function ClientAppointment() {
   const currentDate = new Date();
@@ -30,16 +30,14 @@ export default function ClientAppointment() {
     dateTime: initialDateTime,
   });
 
-  // const appointmentDateTime = new Date(appointment.appointmentDateTime);
-  // const date = appointmentDateTime.toLocaleDateString(); // e.g., "01/09/2010"
-  // const time = appointmentDateTime.toLocaleTimeString(); // e.g., "12:30:00 PM"
+
   const maxMessageLength = 300;
   const [remainingChars, setRemainingChars] = useState(maxMessageLength);
   const { firstName, lastName, email, phone, message, dateTime } = formState;
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  
+
   const [createAppointment] = useMutation(CREATE_APPOINTMENT);
 
   useEffect(() => {
@@ -60,6 +58,13 @@ export default function ClientAppointment() {
 
   function handleChange(event) {
     const { name, value } = event.target;
+
+    // Check if the name of the field being updated is 'message'
+    if (name === "message") {
+      // Set the remaining characters based on the updated message length
+      setRemainingChars(maxMessageLength - value.length);
+    }
+
     if (name !== "dateTime") {
       setFormState({ ...formState, [name]: value });
     }
@@ -82,8 +87,7 @@ export default function ClientAppointment() {
     const { firstName, lastName, email, phone, message, dateTime } = formState;
     const formattedDate = format(dateTime, "MM/dd/yyyy");
     const formattedTime = format(dateTime, "hh:mm a");
-
-     try {
+    try {
       const { data } = await createAppointment({
         variables: {
           firstName,
@@ -92,10 +96,9 @@ export default function ClientAppointment() {
           appointmentTime: formattedTime,
           email,
           phone,
-          message
-        }
+          message,
+        },
       });
-
       if (data) {
         setSuccessMessage("Appointment created successfully");
         setErrorMessage("");
@@ -104,6 +107,7 @@ export default function ClientAppointment() {
         }, 2000);
         setSubmitted(true);
       }
+      console.log(data);
     } catch (error) {
       console.error("Error creating appointment", error);
       setErrorMessage("Error creating appointment");
@@ -119,13 +123,16 @@ export default function ClientAppointment() {
         <div className="row justify-content-center m-3">
           <div className="col-md-6 col-lg-8">
             <div className="p-2 m-3 conf-header-container">
-              <h1 className="p-3 m-0 conf-header">Your appointment has been scheduled!</h1>
+              <h1 className="p-3 m-0 conf-header">
+                Your appointment has been scheduled!
+              </h1>
             </div>
             <div className="">
               <div className="m-3 card conf-container">
                 <div className="m-3 conf-background">
                   <h4 className="pt-3 appt-text">
-                    Thank you, {firstName} {lastName}, for doing business with us.
+                    Thank you, {firstName} {lastName}, for doing business with
+                    us.
                   </h4>
                   <div className="p-3">
                     <p className="appt-text">
@@ -151,9 +158,7 @@ export default function ClientAppointment() {
         <div className="col-md-6 col-lg-8">
           <div className="p-2 m-3 appt-container" id="header-color">
             <div className="m-3 p-5 appt-background">
-              <h1 className="text-center appt-text">
-                Book an Appointment
-              </h1>
+              <h1 className="text-center appt-text">Book an Appointment</h1>
               <form className="mt-3" onSubmit={handleSubmit}>
                 {/* Form Inputs */}
                 <div className="mb-3">

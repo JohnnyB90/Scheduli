@@ -3,6 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import Dashboard from '../DashboardNav/index';
 import { useQuery, useMutation } from '@apollo/client';
 import { gql } from 'graphql-tag';
 
@@ -50,10 +51,15 @@ export default function MyCalendar() {
     const shouldDelete = window.confirm('Are you sure you want to delete this event?');
   
     if (shouldDelete) {
-      await deleteAppointment({ variables: { id: event.id } });
-      setEvents(prevEvents => prevEvents.filter(e => e.id !== event.id));
+      try {
+        await deleteAppointment({ variables: { id: event.id } });
+        setEvents(prevEvents => prevEvents.filter(e => e.id !== event.id));
+      } catch (error) {
+        console.error('Error deleting appointment', error);
+      }
     }
-  };  
+  };
+  
   
 
   const calendarConfig = {
@@ -73,6 +79,7 @@ export default function MyCalendar() {
 
   return (
     <div className="calendar-container">
+      <Dashboard />
       <FullCalendar {...calendarConfig} />
     </div>
   );

@@ -30,9 +30,7 @@ export default function ClientAppointment() {
     dateTime: initialDateTime,
   });
 
-  // const appointmentDateTime = new Date(appointment.appointmentDateTime);
-  // const date = appointmentDateTime.toLocaleDateString(); // e.g., "01/09/2010"
-  // const time = appointmentDateTime.toLocaleTimeString(); // e.g., "12:30:00 PM"
+
   const maxMessageLength = 300;
   const [remainingChars, setRemainingChars] = useState(maxMessageLength);
   const { firstName, lastName, email, phone, message, dateTime } = formState;

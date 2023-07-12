@@ -25,10 +25,18 @@ const resolvers = {
         phone: args.phone,
         message: args.message,
       });
-    
 
       const createdAppointment = await newAppointment.save();
       return createdAppointment;
+    },
+    deleteAppointment: async (_, { _id }) => {
+      try {
+        const deletedAppointment = await Appointment.findByIdAndDelete(_id);
+        return deletedAppointment;
+      } catch (error) {
+        console.error("Error deleting appointment", error);
+        throw new Error("Failed to delete appointment");
+      }
     },
 
     addUser: async (parent, args) => {

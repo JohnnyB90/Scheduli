@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
-
+import './style.css';
 
 export default function PasswordSettings() {
     const [formState, setFormState] = useState({
@@ -36,28 +35,28 @@ export default function PasswordSettings() {
             // Password change logic
             // ...
 
-        setSuccessMessage("Password successfully updated.");
-        setFormState({
-            currentPassword: "",
-            newPassword: "",
-            confirmPassword: "",
-        });
-    } catch (error) {
-        console.error("Error changing password", error);
-        setErrorMessage("Error changing password");
+            setSuccessMessage("Password successfully updated.");
+            setFormState({
+                currentPassword: "",
+                newPassword: "",
+                confirmPassword: "",
+            });
+        } catch (error) {
+            console.error("Error changing password", error);
+            setErrorMessage("Error changing password");
+        }
     }
-}
 
-return (
-    <section className="container">
-        <div className="row">
-            <div className="col-md-6 col-sm-12">
-                <div className="card" id="settings-color">
-                    <div className="card-body p-5 account-settings-form">
-                        <h1 className="card-title text-Black text-center">Password Settings</h1>
+    return (
+        <section className="container">
+            <div className="mt-3 row justify-content-center">
+                <div className="col-md-6 col-sm-12">
+                    <div className="card pw-border" id="settings-color">
+                    <div className="m-3 p-5 pw-background account-settings-form">
+                        <h1 className="card-title pw-text text-center">Password Settings</h1>
                         <form onSubmit={handleSubmit}>
                             <div className="mb-3">
-                                <label htmlFor="currentPassword" className="form-label text-black">
+                                <label htmlFor="currentPassword" className="form-label pw-text">
                                     Current Password
                                 </label>
                                 <input
@@ -70,7 +69,7 @@ return (
                                 />
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="newPassword" className="form-label text-black">
+                                <label htmlFor="newPassword" className="form-label pw-text">
                                     New Password
                                 </label>
                                 <input
@@ -83,7 +82,7 @@ return (
                                 />
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="confirmPassword" className="form-label text-black">
+                                <label htmlFor="confirmPassword" className="form-label pw-text">
                                     Confirm Password
                                 </label>
                                 <input
@@ -96,13 +95,13 @@ return (
                                 />
                             </div>
                             <div className="d-grid gap-2">
-                                <button type="submit" className="btn btn-dark text-white">
+                                <button type="submit" className="btn pw-button">
                                     Change Password
                                 </button>
                             </div>
                         </form>
                         {successMessage && (
-                            <div className="text-success mt-3 text-black text-bold text-center">
+                            <div className="text-success mt-3 pw-text text-bold text-center">
                                 {successMessage}
                             </div>
                         )}
@@ -114,7 +113,7 @@ return (
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-);
+            </div>
+        </section>
+    );
 }

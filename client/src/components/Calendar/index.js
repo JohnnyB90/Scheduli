@@ -79,7 +79,6 @@ export default function MyCalendar() {
 
   return (
     <div className="calendar-container">
-      <Dashboard />
       <FullCalendar {...calendarConfig} />
     </div>
   );

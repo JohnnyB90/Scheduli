@@ -5,7 +5,13 @@ const { signToken } = require("../utils/auth");
 const resolvers = {
   Query: {
     user: async () => {
-      return await User.find().populate("Appointments");
+      try {
+        const user = await User.findOne();
+        console.log(user);
+        return user;
+      } catch (error) {
+        throw new Error("Failed to fetch user data");
+      }
     },
     appointments: async () => {
       return await Appointment.find();

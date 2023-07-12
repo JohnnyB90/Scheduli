@@ -1,22 +1,84 @@
 import React, { useState } from "react";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { UPDATE_USER } from "../../utils/mutations";
+import { QUERY_USER } from "../../utils/queries";
+import { useNavigate } from "react-router-dom";
 import InputMask from "react-input-mask";
 import "./style.css";
 
+const FormField = ({ field, displayName, value, onChange }) => {
+  if (field === "phoneNumber") {
+    return (
+      <div className="mb-3">
+        <label htmlFor={field} className="form-label acc-text m-3">
+          {displayName}
+        </label>
+        <InputMask
+          mask="999-999-9999"
+          type="text"
+          id={field}
+          name={field}
+          value={value}
+          onChange={onChange}
+          required
+        />
+      </div>
+    );
+  }
+
+  if (field === "zipCode") {
+    return (
+      <div className="mb-3">
+        <label htmlFor={field} className="form-label acc-text m-3">
+          {displayName}
+        </label>
+        <InputMask
+          mask="99999"
+          type="text"
+          id={field}
+          name={field}
+          value={value}
+          onChange={onChange}
+          required
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="mb-3">
+      <label htmlFor={field} className="form-label acc-text m-3">
+        {displayName}
+      </label>
+      <input
+        type="text"
+        id={field}
+        name={field}
+        value={value}
+        onChange={onChange}
+        required
+      />
+    </div>
+  );
+};
+
 export default function AccountSettings() {
+  const navigate = useNavigate();
+  const { loading, error, data } = useQuery(QUERY_USER);
+  const [showUpdateSettings, setShowUpdateSettings] = useState(false);
   const [formState, setFormState] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-    businessName: "",
-    businessAddress: "",
-    zipCode: "",
-    city: "",
-    state: "",
-    country: "",
+    firstName: loading || error ? "" : data.user.firstName,
+    lastName: loading || error ? "" : data.user.lastName,
+    email: loading || error ? "" : data.user.email,
+    phoneNumber: loading || error ? "" : data.user.phoneNumber,
+    businessName: loading || error ? "" : data.user.businessName,
+    businessAddress: loading || error ? "" : data.user.businessAddress,
+    zipCode: loading || error ? "" : data.user.zipCode,
+    city: loading || error ? "" : data.user.city,
+    state: loading || error ? "" : data.user.state,
+    country: loading || error ? "" : data.user.country,
   });
+  console.log(loading, error, data);
 
   const displayNameMap = {
     firstName: "First Name",
@@ -34,9 +96,21 @@ export default function AccountSettings() {
   const [currentField, setCurrentField] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [validationError, setValidationError] = useState(""); // New state variable
+  const [validationError, setValidationError] = useState("");
 
   const [updateUser] = useMutation(UPDATE_USER);
+
+  if (loading) {
+    // Add loading state if needed
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    // Handle error state if needed
+    return <div>Error occurred while fetching user data.</div>;
+  }
+
+  const userData = data.user;
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -44,6 +118,18 @@ export default function AccountSettings() {
       ...formState,
       [name]: value,
     });
+  };
+
+  const handleUpdateSettingsClick = () => {
+    setShowUpdateSettings(true);
+  };
+
+  const handleCancelUpdate = () => {
+    setShowUpdateSettings(false);
+    setCurrentField("");
+    setSuccessMessage("");
+    setErrorMessage("");
+    setValidationError("");
   };
 
   async function handleSubmit(event) {
@@ -59,7 +145,6 @@ export default function AccountSettings() {
       return;
     }
 
-    // Custom validation for phoneNumber and zipCode
     if (
       currentField === "phoneNumber" &&
       formState[currentField].includes("_")
@@ -67,6 +152,7 @@ export default function AccountSettings() {
       setValidationError("Please complete the phone number.");
       return;
     }
+
     if (currentField === "zipCode" && formState[currentField].includes("_")) {
       setValidationError("Please complete the zip code.");
       return;
@@ -80,10 +166,12 @@ export default function AccountSettings() {
       if (data) {
         setSuccessMessage("Your account settings have been updated.");
         setErrorMessage("");
-        setValidationError(""); // clear validation error on success
+        setValidationError("");
         setTimeout(() => {
           setSuccessMessage("");
-        }, 5000);
+          // Redirect to account settings page after 2 seconds
+          navigate("/dashboard");
+        }, 2000);
       } else {
         setErrorMessage("Something went wrong. Please try again.");
       }
@@ -91,7 +179,6 @@ export default function AccountSettings() {
       setErrorMessage("Something went wrong. Please try again.");
     }
 
-    // Reset the form state
     setFormState({
       firstName: "",
       lastName: "",
@@ -105,7 +192,6 @@ export default function AccountSettings() {
       country: "",
     });
 
-    // Reset the selected field
     setCurrentField("");
   }
 
@@ -118,111 +204,94 @@ export default function AccountSettings() {
               <h1 className="card-title acc-text text-center mb-3">
                 Account Settings
               </h1>
-              <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <label
-                    htmlFor="selectedSetting"
-                    className="form-label acc-text p-3"
-                  >
-                    Choose Setting to Update
-                  </label>
-                  <select
-                    id="selectedSetting"
-                    name="selectedSetting"
-                    value={currentField}
-                    onChange={(e) => setCurrentField(e.target.value)}
-                  >
-                    <option value="">Select a setting</option>
-                    <option value="email">Email</option>
-                    <option value="phoneNumber">Phone Number</option>
-                    <option value="businessName">Business Name</option>
-                    <option value="businessAddress">Business Address</option>
-                    <option value="zipCode">Zip Code</option>
-                    <option value="city">City</option>
-                    <option value="state">State</option>
-                    <option value="country">Country</option>
-                  </select>
-                </div>
-                {currentField === "phoneNumber" && (
-                  <div className="mb-3">
-                    <label
-                      htmlFor={currentField}
-                      className="form-label acc-text m-3"
-                    >
-                      {displayNameMap[currentField]}
-                    </label>
-                    <InputMask
-                      mask="999-999-9999"
-                      type="text"
-                      id={currentField}
-                      name={currentField}
-                      value={formState[currentField]}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                )}
-                {currentField === "zipCode" && (
-                  <div className="mb-3">
-                    <label
-                      htmlFor={currentField}
-                      className="form-label acc-text m-3"
-                    >
-                      {displayNameMap[currentField]}
-                    </label>
-                    <InputMask
-                      mask="99999"
-                      type="text"
-                      id={currentField}
-                      name={currentField}
-                      value={formState[currentField]}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                )}
-                {currentField &&
-                  currentField !== "phoneNumber" &&
-                  currentField !== "zipCode" && (
-                    <div className="mb-3">
-                      <label
-                        htmlFor={currentField}
-                        className="form-label acc-text m-3"
-                      >
-                        {displayNameMap[currentField]}
-                      </label>
-                      <input
-                        type="text"
-                        id={currentField}
-                        name={currentField}
-                        value={formState[currentField]}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                  )}
 
-                <div className="d-grid gap-2">
-                  <button type="submit" className="btn acc-button mt-3">
-                    Update Account Settings
+              {/* Display current user settings */}
+              {!showUpdateSettings && (
+                <div>
+                  <h2>Current User Settings</h2>
+                  {Object.keys(formState).map((key) => (
+                    <div key={key}>
+                      <label className="acc-text text-decoration-underline mb-2">{displayNameMap[key]}</label>
+                      <p>{userData[key]}</p>
+                    </div>
+                  ))}
+                  <button
+                    className="btn acc-button mt-3"
+                    onClick={handleUpdateSettingsClick}
+                  >
+                    Update User Settings
                   </button>
                 </div>
-                {successMessage && (
-                  <div className="text-success mt-3 text-black text-bold text-center">
-                    {successMessage}
-                  </div>
-                )}
-                {errorMessage && (
-                  <div className="text-danger mt-3 text-black text-bold text-center">
-                    {errorMessage}
-                  </div>
-                )}
-                {validationError && (
-                  <div className="text-danger mt-3 text-bold text-center">
-                    {validationError}
-                  </div>
-                )}
-              </form>
+              )}
+
+              {/* Update user settings form */}
+              {showUpdateSettings && (
+                <div>
+                  <form onSubmit={handleSubmit}>
+                    <h2>Update your Settings</h2>
+                    <div className="mb-3">
+                      <label
+                        htmlFor="selectedSetting"
+                        className="form-label acc-text p-3"
+                      >
+                        Choose Setting to Update
+                      </label>
+                      <select
+                        id="selectedSetting"
+                        name="selectedSetting"
+                        value={currentField}
+                        onChange={(e) => setCurrentField(e.target.value)}
+                      >
+                        <option value="">Select a setting</option>
+                        <option value="email">Email</option>
+                        <option value="phoneNumber">Phone Number</option>
+                        <option value="businessName">Business Name</option>
+                        <option value="businessAddress">
+                          Business Address
+                        </option>
+                        <option value="zipCode">Zip Code</option>
+                        <option value="city">City</option>
+                        <option value="state">State</option>
+                        <option value="country">Country</option>
+                      </select>
+                    </div>
+                    {currentField && (
+                      <FormField
+                        field={currentField}
+                        displayName={displayNameMap[currentField]}
+                        value={formState[currentField]}
+                        onChange={handleChange}
+                      />
+                    )}
+                    <div className="d-grid gap-2">
+                      <button type="submit" className="btn acc-button mt-3">
+                        Save
+                      </button>
+                    </div>
+                    {successMessage && (
+                      <div className="text-success mt-3 text-black text-bold text-center">
+                        {successMessage}
+                      </div>
+                    )}
+                    {errorMessage && (
+                      <div className="text-danger mt-3 text-black text-bold text-center">
+                        {errorMessage}
+                      </div>
+                    )}
+                    {validationError && (
+                      <div className="text-danger mt-3 text-bold text-center">
+                        {validationError}
+                      </div>
+                    )}
+                  </form>
+                  <button
+                    className="btn acc-button mt-3"
+                    onClick={handleCancelUpdate}
+                  >
+                    Back
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

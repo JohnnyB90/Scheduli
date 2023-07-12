@@ -6,7 +6,6 @@ const userTypeDefs = gql`
     firstName: String!
     lastName: String!
     email: String!
-    password: String!
     phoneNumber: String!
     businessName: String!
     businessAddress: String!
@@ -23,6 +22,7 @@ const userTypeDefs = gql`
 
   type Query {
     user: User
+    appointments: [Appointment]
   }
 
   type Mutation {

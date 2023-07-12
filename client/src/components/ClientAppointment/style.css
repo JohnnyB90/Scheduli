@@ -25,6 +25,16 @@
   background-color: #FFF2CC;
 }
 
+.custom-btn {
+  border-radius: 10px;
+  padding: 5px;
+  transition: transform 0.3s ease;
+}
+
+.custom-btn:hover {
+  transform: scale(0.85);
+}
+
 .conf-container {
   background-color: #E5BA73;
 }

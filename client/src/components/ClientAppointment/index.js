@@ -304,7 +304,7 @@ export default function ClientAppointment() {
                   </div>
                 </div>
                 <div className="mt-3 text-center">
-                  <button type="submit" className="btn appt-button">
+                  <button type="submit" className="custom-btn appt-button">
                     Submit
                   </button>
                 </div>

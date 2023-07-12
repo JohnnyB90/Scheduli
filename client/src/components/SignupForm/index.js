@@ -1,38 +1,41 @@
-import React, { useState } from 'react';
-import { useMutation } from '@apollo/client';
-import Auth from '../../utils/auth';
-import { ADD_USER } from '../../utils/mutations';
+import React, { useState } from "react";
+import { useMutation } from "@apollo/client";
+import Auth from "../../utils/auth";
+import { ADD_USER } from "../../utils/mutations";
 import InputMask from "react-input-mask";
+import "./style.css"
 
 function SignupForm() {
   const [formState, setFormState] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    phoneNumber: '',
-    businessName: '',
-    businessAddress: '',
-    zipCode: '',
-    city: '',
-    state: '',
-    country: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    phoneNumber: "",
+    businessName: "",
+    businessAddress: "",
+    zipCode: "",
+    city: "",
+    state: "",
+    country: "",
   });
 
+  const [errorMessage, setErrorMessage] = useState(null);
   const [addUser] = useMutation(ADD_USER);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     try {
-      const { data } = await addUser({
-        variables: { ...formState },
-      });
+        const { data } = await addUser({
+            variables: { ...formState },
+        });
 
-      Auth.login(data.addUser.token);
+        Auth.login(data.addUser.token);
     } catch (error) {
-      console.error(error);
+        setErrorMessage('The provided email is already in use by another account.');
+        console.error(error);
     }
-  };
+};
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -42,10 +45,16 @@ function SignupForm() {
     }));
   };
 
-  
+  const validateEmail = (email) => {
+    const regex = /^\S+@\S+\.\S+$/;
+    return regex.test(email);
+  };
+  const isEmailValid = validateEmail(formState.email);
+
   return (
     <div className="container my-1">
-      <h2>Signup</h2>
+    <h2>Signup</h2>
+    {errorMessage && <p>{errorMessage}</p>}
       <form onSubmit={handleFormSubmit}>
         <div className="flex-row space-between my-2">
           <label htmlFor="firstName">First Name:</label>
@@ -67,23 +76,30 @@ function SignupForm() {
             onChange={handleChange}
           />
         </div>
-        <div className="flex-row space-between my-2">
+      <div className="flex-row space-between my-2">
           <label htmlFor="email">Email:</label>
           <input
             placeholder="youremail@test.com"
             name="email"
             type="email"
             id="email"
+            value={formState.email}
             onChange={handleChange}
+            required
           />
+          {formState.email && !isEmailValid && (
+            <p className="text-danger">Please enter a valid email address.</p>
+          )}
         </div>
         <div className="flex-row space-between my-2">
           <label htmlFor="phoneNumber">Phone Number:</label>
-          <input
+          <InputMask
+            mask="999-999-9999"
             placeholder="Phone Number"
             name="phoneNumber"
             type="text"
             id="phoneNumber"
+            value={formState.phoneNumber}
             onChange={handleChange}
           />
         </div>
@@ -109,11 +125,13 @@ function SignupForm() {
         </div>
         <div className="flex-row space-between my-2">
           <label htmlFor="zipCode">Zip Code:</label>
-          <input
+          <InputMask
+            mask="99999"
             placeholder="Zip Code"
             name="zipCode"
             type="text"
             id="zipCode"
+            value={formState.zipCode}
             onChange={handleChange}
           />
         </div>
@@ -161,6 +179,9 @@ function SignupForm() {
           <button type="submit">Submit</button>
         </div>
       </form>
+        <div>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        </div>
     </div>
   );
 }

@@ -195,6 +195,10 @@ export default function AccountSettings() {
     setCurrentField("");
   }
 
+  const settingsKeys = Object.keys(formState);
+  const totalSettings = settingsKeys.length;
+  const middleIndex = Math.ceil(totalSettings / 2);
+
   return (
     <section className="container">
       <div className="my-3 row justify-content-center">
@@ -205,18 +209,34 @@ export default function AccountSettings() {
                 Account Settings
               </h1>
 
-              {/* Display current user settings */}
-              {!showUpdateSettings && (
+            {/* Display current user settings */}
+            {!showUpdateSettings && (
                 <div>
                   <h2>Current User Settings</h2>
-                  {Object.keys(formState).map((key) => (
-                    <div key={key}>
-                      <label className="acc-text text-decoration-underline mb-2">{displayNameMap[key]}</label>
-                      <p>{userData[key]}</p>
+                  <div className="row">
+                    <div className="col-md-6">
+                      {settingsKeys.slice(0, middleIndex).map((key) => (
+                        <div key={key} className="mt-3">
+                          <label className="acc-text">
+                            {displayNameMap[key]}
+                          </label>
+                          <p className="mt-1">{userData[key]}</p>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                    <div className="col-md-6">
+                      {settingsKeys.slice(middleIndex).map((key) => (
+                        <div key={key} className="mt-3">
+                          <label className="acc-text">
+                            {displayNameMap[key]}
+                          </label>
+                          <p className="mt-1">{userData[key]}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                   <button
-                    className="btn acc-button mt-3"
+                    className="acc-button custom-btn mt-4"
                     onClick={handleUpdateSettingsClick}
                   >
                     Update User Settings
@@ -230,12 +250,14 @@ export default function AccountSettings() {
                   <form onSubmit={handleSubmit}>
                     <h2>Update your Settings</h2>
                     <div className="mb-3">
+                      <div>
                       <label
                         htmlFor="selectedSetting"
                         className="form-label acc-text p-3"
                       >
                         Choose Setting to Update
                       </label>
+                      </div>
                       <select
                         id="selectedSetting"
                         name="selectedSetting"
@@ -264,7 +286,7 @@ export default function AccountSettings() {
                       />
                     )}
                     <div className="d-grid gap-2">
-                      <button type="submit" className="btn acc-button mt-3">
+                      <button type="submit" className="custom-btn acc-button mt-3">
                         Save
                       </button>
                     </div>
@@ -284,12 +306,14 @@ export default function AccountSettings() {
                       </div>
                     )}
                   </form>
+                  <div className="d-grid gap-2">
                   <button
-                    className="btn acc-button mt-3"
+                    className="custom-btn acc-button mt-3"
                     onClick={handleCancelUpdate}
                   >
                     Back
                   </button>
+                  </div>
                 </div>
               )}
             </div>

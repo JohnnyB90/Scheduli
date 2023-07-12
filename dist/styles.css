@@ -892,6 +892,8 @@ code {
 
 .acc-text {
     color: #4f200d;
+    font-weight: bold;
+    margin-top: 3%;
 }
 
 .acc-button {

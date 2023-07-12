@@ -5,3 +5,7 @@
 .nav-background {
     background-color: #FFF2CC;
 }
+
+.nav-link {
+    cursor: default;
+}

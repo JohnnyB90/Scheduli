@@ -1,17 +1,37 @@
-.nav-text {
+.nav-background {
+    background-color: #FFF2CC;
+  }
+  
+  .nav-text {
     color: #4f200d;
     cursor: pointer;
     transition: transform 0.6s ease-in-out;
-}
-
-.nav-text:hover {
+  }
+  
+  .nav-text:hover {
     transform: scale(0.85);
-}
-
-.nav-text.active {
+  }
+  
+  .nav-text.active {
     transform: scale(1);
+    background-color: white;
+  }
+  
+  button:active {
+    background-color: lightgray;
+  }
+  
+  .logout-button {
+    background-color: #4a403a;
+    color: #fff4e0;
 }
 
-.nav-background {
-    background-color: #FFF2CC;
-}
+.custom-btn {
+    border-radius: 10px;
+    padding: 5px;
+    transition: transform 0.3s ease;
+  }
+  
+  .custom-btn:hover {
+    transform: scale(0.85);
+  }

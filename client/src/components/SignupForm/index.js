@@ -3,6 +3,7 @@ import { useMutation } from "@apollo/client";
 import Auth from "../../utils/auth";
 import { ADD_USER } from "../../utils/mutations";
 import InputMask from "react-input-mask";
+import "./style.css"
 
 function SignupForm() {
   const [formState, setFormState] = useState({
@@ -19,20 +20,22 @@ function SignupForm() {
     country: "",
   });
 
+  const [errorMessage, setErrorMessage] = useState(null);
   const [addUser] = useMutation(ADD_USER);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     try {
-      const { data } = await addUser({
-        variables: { ...formState },
-      });
+        const { data } = await addUser({
+            variables: { ...formState },
+        });
 
-      Auth.login(data.addUser.token);
+        Auth.login(data.addUser.token);
     } catch (error) {
-      console.error(error);
+        setErrorMessage('The provided email is already in use by another account.');
+        console.error(error);
     }
-  };
+};
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -50,7 +53,8 @@ function SignupForm() {
 
   return (
     <div className="container my-1">
-      <h2>Signup</h2>
+    <h2>Signup</h2>
+    {errorMessage && <p>{errorMessage}</p>}
       <form onSubmit={handleFormSubmit}>
         <div className="flex-row space-between my-2">
           <label htmlFor="firstName">First Name:</label>
@@ -175,6 +179,9 @@ function SignupForm() {
           <button type="submit">Submit</button>
         </div>
       </form>
+        <div>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        </div>
     </div>
   );
 }

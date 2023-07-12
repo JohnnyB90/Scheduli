@@ -15,7 +15,7 @@ function LoginForm() {
       setShowLoggedInMessage(true);
       setTimeout(() => {
         navigate('/dashboard');
-      }, 3000);
+      }, 2000);
     }
   }, [navigate]);
 

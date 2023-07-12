@@ -110,7 +110,7 @@ export default function ClientAppointment() {
   
         // Redirect to calendar route after 2 seconds
         setTimeout(() => {
-          navigate('/calendar');
+          navigate('/dashboard');
         }, 2000);
       }
     } catch (error) {

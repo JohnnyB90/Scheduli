@@ -46,9 +46,14 @@ const resolvers = {
     },
 
     addUser: async (parent, args) => {
+      const { email } = args;
+      // check if user with this email already exists
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        throw new Error("A user with this email already exists");
+      }
       const user = await User.create(args);
       const token = signToken(user);
-
       return { token, user };
     },
     updateUser: async (parent, args, context) => {

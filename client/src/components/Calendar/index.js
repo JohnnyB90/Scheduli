@@ -1,5 +1,3 @@
-// MyCalendar.js
-
 import React, { useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -37,22 +35,26 @@ export default function MyCalendar() {
 
   useEffect(() => {
     if (data) {
-      setEvents(data.appointments.map(a => ({
-        _id: a.id,
-        title: `${a.firstName} ${a.lastName}`,
-        start: `${a.appointmentDate}T${a.appointmentTime}`,
-      })));
+      const eventsData = data.appointments.map(appointment => ({
+        id: appointment._id,
+        title: `${appointment.firstName} ${appointment.lastName}`,
+        start: new Date(appointment.appointmentDate),
+        end: new Date(appointment.appointmentDate).setMinutes(30)
+      }));
+      console.log(eventsData);
+      setEvents(eventsData);
     }
   }, [data]);
-  
+
   const handleEventClick = async ({ event }) => {
     const shouldDelete = window.confirm('Are you sure you want to delete this event?');
-
+  
     if (shouldDelete) {
-      await deleteAppointment({ variables: { _id: event.id } });
-      setEvents(events.filter(e => e.id !== event.id));
+      await deleteAppointment({ variables: { id: event.id } });
+      setEvents(prevEvents => prevEvents.filter(e => e.id !== event.id));
     }
-  };
+  };  
+  
 
   const calendarConfig = {
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -64,8 +66,6 @@ export default function MyCalendar() {
     },
     events,
     eventClick: handleEventClick,
-    slotMinTime: '08:00:00',
-    slotMaxTime: '21:00:00',
   };
 
   if (loading) return 'Loading...';

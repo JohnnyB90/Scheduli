@@ -21,26 +21,7 @@ export default function PasswordSettings() {
         const { name, value } = event.target;
         setFormState({ ...formState, [name]: value });
     }
-    // function handleChange(event) {
-    //     const { name, value } = event.target;
-
-    //     // current password validation?
-    //     if (name === "currentPassword" && value.trim() === "") {
-    //         setErrorMessage("Please enter your current password.");
-    //         return;
-    //     }
-    //     // new password validation
-    //     if (
-    //         name === "newPassword" && 
-    //         value !== "" &&
-    //         value !== confirmPassword
-    //         ) {
-    //         setErrorMessage("New password and confirm password must match.");
-    //         return;
-    //     }
-    //     setFormState({ ...formState, [name]: value });
-    // }
-
+  
     async function handleSubmit(event) {
         event.preventDefault();
 
@@ -56,7 +37,7 @@ export default function PasswordSettings() {
 
         try { 
             const { data } = await updatePassword({
-                variables: { currentPassword, newPassword },
+                variables: { currentPassword, newPassword, confirmPassword },
             });
 
         if (data) {
@@ -78,6 +59,7 @@ export default function PasswordSettings() {
         newPassword: "",
         confirmPassword: "",
     });
+    console.log(currentPassword, newPassword, confirmPassword);
 }
 
 return (

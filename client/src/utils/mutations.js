@@ -45,7 +45,7 @@ export const UPDATE_USER = gql`
 
 export const UPDATE_PASSWORD = gql`
   mutation updatePassword(
-  $currentPassword: String!, 
+  $currentPassword: String! 
   $newPassword: String!
   $confirmPassword: String!
   ) {

@@ -1,6 +1,7 @@
 const { AuthenticationError } = require("apollo-server-express");
 const { User, Appointment } = require("../models"); // Import the Appointment model
-const { signToken } = require("../utils/auth");
+const { signToken, authMiddleware } = require("../utils/auth");
+const bcrypt = require("bcrypt");
 
 const resolvers = {
   Query: {
@@ -61,20 +62,29 @@ const resolvers = {
 
       return { token, user };
     },
-    updatePassword: async (parent, args, context) => {
-      const { currentPassword, newPassword, confirmPassword } = args;
+    updatePassword: async (_, { currentPassword, newPassword }, context) => {
+      console.log(context);
       
-      if (newPassword !== confirmPassword) {
-        throw new Error('Passwords do not match');
+      await authMiddleware(context);
+
+      const userId = context.user._id;
+
+      if (!user) {
+        throw new Error('You need to be logged in!');
       }
 
-      const user = await User.findById(context.user._id);
+      const user = await User.findById(userId);
 
-      if (user.password !== currentPassword) {
+      const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+
+      if (!passwordMatch) {
         throw new Error('Current password is incorrect');
       }
 
-      user.password = newPassword;
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      user.password = hashedPassword;
+
       await user.save();
 
       return user;

@@ -31,6 +31,9 @@ export default function ClientAppointment() {
     dateTime: initialDateTime,
   });
 
+  // const appointmentDateTime = new Date(appointment.appointmentDateTime);
+  // const date = appointmentDateTime.toLocaleDateString(); // e.g., "01/09/2010"
+  // const time = appointmentDateTime.toLocaleTimeString(); // e.g., "12:30:00 PM"
   const maxMessageLength = 300;
   const [remainingChars, setRemainingChars] = useState(maxMessageLength);
   const { firstName, lastName, email, phone, message, dateTime } = formState;
@@ -81,7 +84,7 @@ export default function ClientAppointment() {
     const formattedDate = format(dateTime, "MM/dd/yyyy");
     const formattedTime = format(dateTime, "hh:mm a");
 
-    try {
+     try {
       const { data } = await createAppointment({
         variables: {
           firstName,

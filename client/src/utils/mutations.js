@@ -4,8 +4,8 @@ export const CREATE_APPOINTMENT = gql`
   mutation createAppointment(
     $firstName: String!
     $lastName: String!
-    $date: String!
-    $time: String!
+    $appointmentDate: String!
+    $appointmentTime: String!
     $email: String!
     $phone: String!
     $message: String!
@@ -13,8 +13,8 @@ export const CREATE_APPOINTMENT = gql`
     createAppointment(
       firstName: $firstName
       lastName: $lastName
-      date: $date
-      time: $time
+      appointmentDate: $appointmentDate
+      appointmentTime: $appointmentTime
       email: $email
       phone: $phone
       message: $message

@@ -40,7 +40,6 @@ const userTypeDefs = gql`
       country: String!
     ): Auth
     updateUser(
-      # _id: ID!
       firstName: String
       lastName: String
       email: String

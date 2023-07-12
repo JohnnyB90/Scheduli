@@ -15,6 +15,16 @@ code {
     monospace;
 }
 
+/*!************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./client/src/components/DashboardNav/style.css ***!
+  \************************************************************************************************/
+.nav-text {
+    color: #4f200d;
+}
+
+.nav-background {
+    background-color: #FFF2CC;
+}
 /*!***********************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./client/src/components/Calendar/calendar.css ***!
   \***********************************************************************************************/
@@ -858,16 +868,6 @@ code {
 
 .conf-body {
   background-color: #E5BA73;
-}
-/*!************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js!./client/src/components/DashboardNav/style.css ***!
-  \************************************************************************************************/
-.nav-text {
-    color: #4f200d;
-}
-
-.nav-background {
-    background-color: #FFF2CC;
 }
 /*!***************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./client/src/components/AccountSettings/style.css ***!

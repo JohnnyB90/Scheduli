@@ -1,6 +1,7 @@
 const { AuthenticationError } = require("apollo-server-express");
 const { User, Appointment } = require("../models"); // Import the Appointment model
-const { signToken } = require("../utils/auth");
+const { signToken, authMiddleware } = require("../utils/auth");
+const bcrypt = require("bcrypt");
 
 const resolvers = {
   Query: {
@@ -61,28 +62,33 @@ const resolvers = {
 
       return { token, user };
     },
-    createAppointment: async (parent, args) => {
-      const appointment = await Appointment.create(args);
-      return appointment;
-    },    
-    deleteAppointment: async (_, { _id }, context) => {
-      if (!context.user) {
-        throw new AuthenticationError('You need to be logged in to delete appointments!');
+    updatePassword: async (_, { currentPassword, newPassword }, context) => {
+      console.log(context);
+      
+      await authMiddleware(context);
+
+      const userId = context.user._id;
+
+      if (!user) {
+        throw new Error('You need to be logged in!');
       }
-    
-      const appointment = await Appointment.findById(_id);
-    
-      if (!appointment) {
-        throw new Error('Appointment not found');
+
+      const user = await User.findById(userId);
+
+      const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+
+      if (!passwordMatch) {
+        throw new Error('Current password is incorrect');
       }
-    
-      if (appointment.user.toString() !== context.user._id) {
-        throw new AuthenticationError('You can only delete your own appointments!');
-      }
-    
-      await appointment.remove();
-      return appointment;
-    },    
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      user.password = hashedPassword;
+
+      await user.save();
+
+      return user;
+    },
   },
 };
 

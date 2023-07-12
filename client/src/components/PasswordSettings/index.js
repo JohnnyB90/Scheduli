@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import './style.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { useMutation } from '@apollo/client';
+import { UPDATE_PASSWORD } from "../../utils/mutations";
+import { set } from "mongoose";
 
 export default function PasswordSettings() {
     const [formState, setFormState] = useState({
@@ -12,40 +15,52 @@ export default function PasswordSettings() {
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
+    const [updatePassword] = useMutation(UPDATE_PASSWORD);
+
     function handleChange(event) {
         const { name, value } = event.target;
-
-        // current password validation?
-        if (currentPassword.trim() === "") {
-            setErrorMessage("Please enter your current password.");
-            return;
-        }
-        // new password validation
-        if (newPassword !== confirmPassword) {
-            setErrorMessage("New password and confirm password must match.");
-            return;
-        }
         setFormState({ ...formState, [name]: value });
     }
-
+  
     async function handleSubmit(event) {
         event.preventDefault();
 
-        try { // use mutation
-            // Password change logic
-            // ...
+        if (currentPassword.trim() === "") {
+            setErrorMessage("Please enter your current password.");
+            return;
+          }
+      
+          if (newPassword !== confirmPassword) {
+            setErrorMessage("New password and confirm password must match.");
+            return;
+          }
 
-            setSuccessMessage("Password successfully updated.");
-            setFormState({
-                currentPassword: "",
-                newPassword: "",
-                confirmPassword: "",
+        try { 
+            const { data } = await updatePassword({
+                variables: { currentPassword, newPassword, confirmPassword },
             });
-        } catch (error) {
-            console.error("Error changing password", error);
+
+        if (data) {
+            setSuccessMessage("Your password has been updated.");
+                setErrorMessage("");
+                setTimeout(() => {
+                    setSuccessMessage("");
+                }, 5000);
+        } else {
             setErrorMessage("Error changing password");
+            setSuccessMessage("");
         }
+    } catch (error) {
+        console.error("Error changing password", error);
+        setErrorMessage("Error changing password");
     }
+    setFormState({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+    });
+    console.log(currentPassword, newPassword, confirmPassword);
+}
 
     return (
         <section className="container">

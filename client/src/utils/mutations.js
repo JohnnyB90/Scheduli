@@ -1,5 +1,45 @@
 import { gql } from '@apollo/client';
 
+export const CREATE_APPOINTMENT = gql`
+  mutation createAppointment(
+    $firstName: String!
+    $lastName: String!
+    $date: String!
+    $time: String!
+    $email: String!
+    $phone: String!
+    $message: String!
+  ) {
+    createAppointment(
+      firstName: $firstName
+      lastName: $lastName
+      date: $date
+      time: $time
+      email: $email
+      phone: $phone
+      message: $message
+    ) {
+      _id
+      firstName
+      lastName
+      appointmentDate
+      appointmentTime
+      email
+      phone
+      message
+    }
+  }
+`;
+
+export const DELETE_APPOINTMENT = gql`
+  mutation deleteAppointment($id: ID!) {
+    deleteAppointment(_id: $id) {
+      _id
+    }
+  }
+`;
+
+
 export const LOGIN = gql`
   mutation login($email: String!, $password: String!) {
     login(email: $email, password: $password) {

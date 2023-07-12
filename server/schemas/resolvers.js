@@ -8,10 +8,10 @@ const resolvers = {
       return await User.find().populate("Appointments");
     },
     appointments: async () => {
-      return await Appointment.find().populate("user");
+      return await Appointment.find();
     },
-    appointment: async (_, { id }) => {
-      return await Appointment.findById(id).populate("user");
+    appointment: async (_, { _id }) => {
+      return await Appointment.findById(_id);
     },
   },
   Mutation: {
@@ -60,8 +60,30 @@ const resolvers = {
       const token = signToken(user);
 
       return { token, user };
-    }
-  }
+    },
+    createAppointment: async (parent, args) => {
+      const appointment = await Appointment.create(args);
+      return appointment;
+    },    
+    deleteAppointment: async (_, { _id }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError('You need to be logged in to delete appointments!');
+      }
+    
+      const appointment = await Appointment.findById(_id);
+    
+      if (!appointment) {
+        throw new Error('Appointment not found');
+      }
+    
+      if (appointment.user.toString() !== context.user._id) {
+        throw new AuthenticationError('You can only delete your own appointments!');
+      }
+    
+      await appointment.remove();
+      return appointment;
+    },    
+  },
 };
 
 module.exports = resolvers;

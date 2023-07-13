@@ -203,7 +203,7 @@ export default function AccountSettings() {
     <section className="container">
       <div className="my-3 row justify-content-center">
         <div className="col-md-6 col-sm-12">
-          <div className="card acc-border" id="settings-color">
+          <div className="card acc-border">
             <div className="m-3 p-5 account-settings-form acc-background">
               <h1 className="card-title acc-text text-center mb-3">
                 Account Settings

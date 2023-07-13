@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const GET_ALL_APPOINTMENTS = gql`
-  query {
-    appointments {
+  query appointments($userId: ID!) {
+    appointments(userId: $userId) {
       _id
       firstName
       lastName
@@ -14,6 +14,8 @@ export const GET_ALL_APPOINTMENTS = gql`
     }
   }
 `;
+
+
 
 export const GET_ONE_APPOINTMENT = gql`
   query appointment($id: ID!) {
@@ -36,6 +38,7 @@ query getUser($userId: ID!) {
   user(userId: $userId) {
     firstName
     lastName
+    password
     email
     phoneNumber
     businessName

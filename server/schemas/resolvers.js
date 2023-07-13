@@ -6,39 +6,74 @@ const resolvers = {
   Query: {
     user: async (_, { userId }, ___) => {
       if (!userId) {
-        throw new AuthenticationError('User ID not provided');
+        throw new AuthenticationError("User ID not provided");
       }
       try {
         const user = await User.findById(userId);
         return user;
       } catch (error) {
-        throw new Error('Failed to fetch user data');
+        throw new Error("Failed to fetch user data");
       }
     },
 
-
-
-    appointments: async () => {
-      return await Appointment.find();
+    appointments: async (_, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("User ID not provided");
+      }
+      return await Appointment.find({ user: userId });
     },
+    
     appointment: async (_, { _id }) => {
       return await Appointment.findById(_id);
     },
-  },
+    },   
   Mutation: {
-    createAppointment: async (_, args) => {
-      const newAppointment = new Appointment({
-        firstName: args.firstName,
-        lastName: args.lastName,
-        appointmentDate: args.appointmentDate,
-        appointmentTime: args.appointmentTime,
-        email: args.email,
-        phone: args.phone,
-        message: args.message,
-      });
+    createAppointment: async (
+      _,
+      {
+        userId,
+        firstName,
+        lastName,
+        appointmentDate,
+        appointmentTime,
+        email,
+        phone,
+        message,
+      },
+      context
+    ) => {
+      // Now userId is directly from args
+      if (!userId) {
+        throw new AuthenticationError("User ID not provided");
+      }
 
-      const createdAppointment = await newAppointment.save();
-      return createdAppointment;
+      try {
+        // Find the user based on the userId
+        const user = await User.findById(userId);
+
+        if (!user) {
+          throw new Error("User not found");
+        }
+
+        // Create the appointment and associate it with the user
+        const appointment = new Appointment({
+          user: userId,
+          firstName,
+          lastName,
+          appointmentDate,
+          appointmentTime,
+          email,
+          phone,
+          message,
+        });
+
+        const createdAppointment = await appointment.save();
+
+        return createdAppointment;
+      } catch (error) {
+        console.error("Error creating appointment", error);
+        throw new Error("Failed to create appointment");
+      }
     },
     deleteAppointment: async (_, { _id }) => {
       try {
@@ -49,15 +84,12 @@ const resolvers = {
         throw new Error("Failed to delete appointment");
       }
     },
-
     updateUser: async (_, args, context) => {
       const { userId } = context;
       if (!userId) {
-        throw new AuthenticationError('User ID not provided');
+        throw new AuthenticationError("User ID not provided");
       }
     },
-    
-
     addUser: async (parent, args) => {
       const { email } = args;
       // check if user with this email already exists

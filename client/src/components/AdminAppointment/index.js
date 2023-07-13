@@ -8,8 +8,10 @@ import { useMutation } from "@apollo/client";
 import { CREATE_APPOINTMENT } from "../../utils/mutations";
 import { TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 import InputMask from "react-input-mask";
 import format from "date-fns/format";
+import authService from "../../utils/auth";
 import "./style.css";
 
 export default function ClientAppointment() {
@@ -31,7 +33,6 @@ export default function ClientAppointment() {
     message: "",
     dateTime: initialDateTime,
   });
-
 
   const maxMessageLength = 300;
   const [remainingChars, setRemainingChars] = useState(maxMessageLength);
@@ -85,32 +86,42 @@ export default function ClientAppointment() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-  
+
+    // Get the token from authService
+    const token = authService.getToken();
+    console.log("Token:", token);
+
+    // Decode the token to get the user ID
+    const decodedToken = jwt_decode(token);
+    const userId = decodedToken.data._id;
+    console.log(userId);
+
     const { firstName, lastName, email, phone, message, dateTime } = formState;
     const formattedDate = format(dateTime, "MM/dd/yyyy");
     const formattedTime = format(dateTime, "hh:mm a");
-  
+
     try {
       const { data } = await createAppointment({
         variables: {
+          userId,
           firstName,
           lastName,
           appointmentDate: formattedDate,
           appointmentTime: formattedTime,
           email,
           phone,
-          message
-        }
+          message,
+        },
       });
-  
+
       if (data) {
         setSuccessMessage("Appointment created successfully");
         setErrorMessage("");
         setSubmitted(true);
-  
+
         // Redirect to calendar route after 2 seconds
         setTimeout(() => {
-          navigate('/dashboard');
+          navigate("/dashboard");
         }, 2000);
       }
     } catch (error) {
@@ -118,11 +129,9 @@ export default function ClientAppointment() {
       setErrorMessage("Error creating appointment");
       setSuccessMessage("");
     }
-  
+
     setRemainingChars(maxMessageLength);
   }
-  
-  
 
   return (
     <section className="container mobile">

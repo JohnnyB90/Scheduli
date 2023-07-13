@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -9,6 +9,8 @@ import { CREATE_APPOINTMENT } from "../../utils/mutations";
 import { TextField } from "@mui/material";
 import InputMask from "react-input-mask";
 import format from "date-fns/format";
+import { useParams } from "react-router-dom";
+
 import "./style.css";
 
 export default function ClientAppointment() {
@@ -38,6 +40,8 @@ export default function ClientAppointment() {
   const [errorMessage, setErrorMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
+  const { userId } = useParams(); // Retrieve the userId from the URL parameters
+
   const [createAppointment] = useMutation(CREATE_APPOINTMENT);
 
   useEffect(() => {
@@ -55,6 +59,8 @@ export default function ClientAppointment() {
       }));
     }
   }, [dateTime]);
+
+
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -90,6 +96,7 @@ export default function ClientAppointment() {
     try {
       const { data } = await createAppointment({
         variables: {
+          userId, // Pass the userId obtained from the URL parameters
           firstName,
           lastName,
           appointmentDate: formattedDate,
@@ -107,7 +114,6 @@ export default function ClientAppointment() {
         }, 2000);
         setSubmitted(true);
       }
-      console.log(data);
     } catch (error) {
       console.error("Error creating appointment", error);
       setErrorMessage("Error creating appointment");

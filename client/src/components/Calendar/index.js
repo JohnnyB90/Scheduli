@@ -3,23 +3,14 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { format, parse, addMinutes } from 'date-fns';
+import { format, parse, addMinutes } from "date-fns";
+import jwt_decode from "jwt-decode";
+import authService from "../../utils/auth";
+import { GET_ALL_APPOINTMENTS } from "../../utils/queries";
 import { useQuery, useMutation } from "@apollo/client";
 import { gql } from "graphql-tag";
 
 import "./calendar.css";
-
-const GET_APPOINTMENTS = gql`
-  query GetAppointments {
-    appointments {
-      _id
-      appointmentDate
-      appointmentTime
-      firstName
-      lastName
-    }
-  }
-`;
 
 const DELETE_APPOINTMENT = gql`
   mutation DeleteAppointment($id: ID!) {
@@ -30,29 +21,48 @@ const DELETE_APPOINTMENT = gql`
 `;
 
 export default function MyCalendar() {
-  const { loading, error, data, refetch } = useQuery(GET_APPOINTMENTS);
-  const [deleteAppointment] = useMutation(DELETE_APPOINTMENT);
+  const [userId, setUserId] = useState(null);
 
+  const [deleteAppointment] = useMutation(DELETE_APPOINTMENT);
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
+    // Get the token from authService
+    const token = authService.getToken();
+
+    // Decode the token to get the user ID
+    const decodedToken = jwt_decode(token);
+    const userId = decodedToken.data._id;
+    // console.log(userId);
+
+    setUserId(userId);
+  }, []);
+
+  // Use the userId variable in the useQuery hook
+  const { loading, error, data, refetch } = useQuery(GET_ALL_APPOINTMENTS, {
+    variables: { userId },
+  });
+
+  console.log(data); // Check if data is undefined or has a value
+
+  useEffect(() => {
     if (data && data.appointments) {
-      const eventsData = data.appointments.map(appointment => {
+      const eventsData = data.appointments.map((appointment) => {
         const startDate = parse(
           `${appointment.appointmentDate} ${appointment.appointmentTime}`,
-          'MM/dd/yyyy hh:mm a',
+          "MM/dd/yyyy hh:mm a",
           new Date()
         );
         const endDate = addMinutes(startDate, 30);
-  
+
         return {
           id: appointment._id,
           title: `${appointment.firstName} ${appointment.lastName}`,
           start: startDate,
-          end: endDate
+          end: endDate,
         };
       });
-  
+
       setEvents(eventsData);
     }
   }, [data]);
@@ -61,7 +71,6 @@ export default function MyCalendar() {
     // Refresh the calendar after creating or deleting an appointment
     refetch();
   }, [refetch]);
-
 
   const handleEventClick = async ({ event }) => {
     const shouldDelete = window.confirm(

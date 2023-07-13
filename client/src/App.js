@@ -51,7 +51,7 @@ function App() {
           <Routes>
             {/* Unauthenticated routes available */}
             <Route path="/" element={<EntryForm />} />
-            <Route path="/appointment" element={<ClientAppointment />}/>
+            <Route path="/appointment/:userId" element={<ClientAppointment />}/>
             {/* Authenticated Routes */}
             <Route
               path="/calendar"

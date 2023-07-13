@@ -12,21 +12,29 @@ export default function Navbar({ navLinks = [], currentLink, setCurrentLink }) {
 
   const handleToggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
+  
+  };
+
+  const handleNavLinkClick = (navLink) => {
+    setIsCollapsed(true);
+    setCurrentLink(navLink);
   };
 
   return (
-    <nav className="justify-content-center nav-background navbar navbar-expand-lg navbar-light nav-background nav-tabs nav">
+    <nav className="justify-content-center nav-background navbar navbar-expand-lg navbar-light nav-background nav-tabs nav" style={{ paddingBottom: 0 }}>
       <div className="container-fluid">
-        <Link className="navbar-brand nav-text" to="/">
+        <Link className="navbar-brand nav-text" to="/" style={{ paddingBottom: 10 }}>
           Scheduli
         </Link>
-        <button
-          className="navbar-toggler"
-          type="button"
-          onClick={handleToggleCollapse}
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
+        <div style={{ paddingBottom: 7 }}>
+          <button
+            className="navbar-toggler"
+            type="button"
+            onClick={handleToggleCollapse}
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+        </div>
         <div
           className={`collapse navbar-collapse${isCollapsed ? "" : " show"}`}
         >
@@ -34,11 +42,10 @@ export default function Navbar({ navLinks = [], currentLink, setCurrentLink }) {
             {navLinks.map((navLink) => (
               <li key={navLink.name} className="nav-item nav-text">
                 <Link
-                  className={`nav-link nav-text ${
-                    currentLink === navLink ? "active" : ""
-                  }`}
+                  className={`nav-link nav-text ${currentLink === navLink ? "active" : ""
+                    }`}
                   to={navLink.url}
-                  onClick={() => setCurrentLink(navLink)}
+                  onClick={() => handleNavLinkClick(navLink)}
                 >
                   {navLink.name}
                 </Link>

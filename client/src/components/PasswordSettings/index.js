@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useMutation } from '@apollo/client';
 import { UPDATE_PASSWORD } from "../../utils/mutations";
 import { set } from "mongoose";
+import "./style.css";
 
 export default function PasswordSettings() {
     const [formState, setFormState] = useState({

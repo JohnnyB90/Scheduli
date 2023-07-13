@@ -24,3 +24,9 @@
   .custom-btn:hover {
     transform: scale(0.85);
   }
+
+@media (max-width: 1284px) {
+    #mainContent {
+      height: auto;
+    }
+  }

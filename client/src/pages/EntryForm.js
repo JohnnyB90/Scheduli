@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import LoginForm from "../components/LoginForm";
 import SignupForm from "../components/SignupForm";
-
+import "../pages/styles/entryFormStyles.css"
 
 
 function EntryForm() {
@@ -13,11 +13,11 @@ function EntryForm() {
 
   return (
     <div>
-      {isLogin ? 
-        <LoginForm handleToggle={handleToggle} />
-        : 
-        <SignupForm handleToggle={handleToggle} />
-      }
+      <button onClick={handleToggle} type="submit"
+      className="my-3 justify-content-center custom-btn login-switch-button">
+        {isLogin ? 'Go to Signup' : 'Go to Login'}
+      </button>
+      {isLogin ? <LoginForm /> : <SignupForm />}
     </div>
   );
 }

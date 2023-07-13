@@ -52,7 +52,7 @@ export default function Navbar({ navLinks = [], currentLink, setCurrentLink }) {
               </li>
             ))}
           </ul>
-          <button className="logout-button nav-text custom-btn" onClick={handleLogout}>
+          <button type="submit" className="logout-button nav-text custom-btn" onClick={handleLogout}>
             Logout
           </button>
         </div>

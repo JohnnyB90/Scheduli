@@ -30,20 +30,21 @@ export const GET_ONE_APPOINTMENT = gql`
   }
 `;
 
+
 export const QUERY_USER = gql`
-  query {
-    user {
-      _id
-      firstName
-      lastName
-      email
-      phoneNumber
-      businessName
-      businessAddress
-      zipCode
-      city
-      state
-      country
-    }
+query getUser($userId: ID!) {
+  user(userId: $userId) {
+    firstName
+    lastName
+    email
+    phoneNumber
+    businessName
+    businessAddress
+    zipCode
+    city
+    state
+    country
   }
+}
 `;
+

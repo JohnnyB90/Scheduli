@@ -5,6 +5,15 @@ class AuthService {
     return decode(this.getToken());
   }
 
+  getUserId() {
+    const decodedToken = this.getProfile();
+    console.log(decodedToken);
+    if (decodedToken) {
+      return decodedToken.userId;
+    }
+    return null;
+  }
+
   loggedIn() {
     // Checks if there is a saved token and it's still valid
     const token = this.getToken();

@@ -7,26 +7,25 @@ module.exports = {
   authMiddleware: function ({ req }) {
     // allows token to be sent via req.body, req.query, or headers
     let token = req.body.token || req.query.token || req.headers.authorization;
-
-
+  
     if (req.headers.authorization) {
       token = token.split(' ').pop().trim();
     }
-  
   
     if (!token) {
       return req;
     }
   
     try {
-      const { data } = jwt.verify(token, secret, { maxAge: expiration });
-      req.user = data;
+      const decodedToken = jwt.verify(token, secret, { maxAge: expiration });
+      req.user = decodedToken.data; // Include the user ID in the req object
     } catch {
       console.log('Invalid token');
     }
   
     return req;
   },
+  
   signToken: function ({ firstName, email, _id }) {
     const payload = { firstName, email, _id };
 

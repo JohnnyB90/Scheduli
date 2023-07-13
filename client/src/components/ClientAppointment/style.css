@@ -55,3 +55,13 @@
 .conf-body {
   background-color: #E5BA73;
 }
+
+@media (max-width: 1284px) {
+  .container.mobile {
+    margin-top: 0;
+    margin-bottom: 0;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

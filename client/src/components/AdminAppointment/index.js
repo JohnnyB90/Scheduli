@@ -125,13 +125,13 @@ export default function ClientAppointment() {
   
 
   return (
-    <section className="container">
-      <div className="row justify-content-center m-3">
+    <section className="container mobile">
+      <div className="row justify-content-center">
         <div className="col-md-6 col-lg-8">
           <div className="p-2 m-3 appt-container" id="header-color">
             <div className="m-3 p-5 appt-background">
               <h1 className="text-center appt-text">
-                Add an appointment to your calendar
+                Add an Appointment to Your Calendar
               </h1>
               <form className="mt-3" onSubmit={handleSubmit}>
                 {/* Form Inputs */}

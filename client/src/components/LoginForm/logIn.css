@@ -4,6 +4,7 @@
     border-radius: 4px;
     background-color: #FFF2CC;
     max-width: 960px;
+    margin-top: 50px;
 }
 
 .login-form-container h2 {
@@ -39,6 +40,11 @@ button[type="submit"] {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    margin: 15px;
+    margin-right: 20px;
+    margin-left: 12px;
+    padding-left: 38px;
+    padding-right: 38px;
 }
 
 button[type="submit"]:hover {

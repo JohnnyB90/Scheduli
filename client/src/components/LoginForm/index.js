@@ -5,7 +5,7 @@ import { useMutation } from '@apollo/client';
 import { LOGIN } from '../../utils/mutations';
 import './logIn.css'
 
-function LoginForm() {
+function LoginForm({ handleToggle }) {
   const [formState, setFormState] = useState({ email: '', password: '' });
   const [login, { error }] = useMutation(LOGIN);
   const navigate = useNavigate();
@@ -96,7 +96,8 @@ function LoginForm() {
                   ) : null}
                 </div>
                 <div className="form-group">
-                  <button type="submit">Submit</button>
+                  <button type="submit">Login</button>
+                  <button type="login" onClick={handleToggle}>Go to Signup</button>
                 </div>
               </div>
             </form>

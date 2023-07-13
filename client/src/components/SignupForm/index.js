@@ -191,7 +191,7 @@ function SignupForm() {
                   />
                 </div>
                 <div className="">
-                  <button className="btn-submit" type="submit">Submit</button>
+                  <button className="btn-submit custom-btn" type="submit">Submit</button>
                 </div>
               </div>
             </div>

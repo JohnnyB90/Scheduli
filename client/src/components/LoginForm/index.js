@@ -96,7 +96,7 @@ function LoginForm() {
                   ) : null}
                 </div>
                 <div className="form-group">
-                  <button type="submit">Submit</button>
+                  <button type="submit" className="custom-btn">Submit</button>
                 </div>
               </div>
             </form>

@@ -4,15 +4,20 @@ const { signToken } = require("../utils/auth");
 
 const resolvers = {
   Query: {
-    user: async () => {
+    user: async (_, { userId }, ___) => {
+      if (!userId) {
+        throw new AuthenticationError('User ID not provided');
+      }
       try {
-        const user = await User.findOne();
-        console.log(user);
+        const user = await User.findById(userId);
         return user;
       } catch (error) {
-        throw new Error("Failed to fetch user data");
+        throw new Error('Failed to fetch user data');
       }
     },
+
+
+
     appointments: async () => {
       return await Appointment.find();
     },
@@ -44,6 +49,14 @@ const resolvers = {
         throw new Error("Failed to delete appointment");
       }
     },
+
+    updateUser: async (_, args, context) => {
+      const { userId } = context;
+      if (!userId) {
+        throw new AuthenticationError('User ID not provided');
+      }
+    },
+    
 
     addUser: async (parent, args) => {
       const { email } = args;

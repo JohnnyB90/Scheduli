@@ -21,9 +21,9 @@ const userTypeDefs = gql`
   }
 
   type Query {
-    user: User
-    appointments: [Appointment]
-  }
+  user(userId: ID!): User
+  appointments: [Appointment]
+}
 
   type Mutation {
     addUser(

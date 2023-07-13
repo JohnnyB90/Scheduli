@@ -13,11 +13,11 @@ function EntryForm() {
 
   return (
     <div>
-      <button onClick={handleToggle} type="submit"
-      className="my-3 justify-content-center custom-btn login-switch-button">
-        {isLogin ? 'Go to Signup' : 'Go to Login'}
-      </button>
-      {isLogin ? <LoginForm /> : <SignupForm />}
+      {isLogin ? 
+        <LoginForm handleToggle={handleToggle} />
+        : 
+        <SignupForm handleToggle={handleToggle} />
+      }
     </div>
   );
 }

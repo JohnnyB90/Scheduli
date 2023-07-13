@@ -1,14 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Auth from '../../utils/auth';
 import { useMutation } from '@apollo/client';
 import { LOGIN } from '../../utils/mutations';
-// import { redirect } from 'react-router-dom';
 import './logIn.css';
-// testing merge fix
 
 function LoginForm() {
   const [formState, setFormState] = useState({ email: '', password: '' });
   const [login, { error }] = useMutation(LOGIN);
+  const navigate = useNavigate();
+  const [showLoggedInMessage, setShowLoggedInMessage] = useState(false);
+
+  useEffect(() => {
+    if (Auth.loggedIn()) {
+      setShowLoggedInMessage(true);
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 2000);
+    }
+  }, [navigate]);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -18,9 +28,7 @@ function LoginForm() {
       });
 
       Auth.login(data.login.token);
-      // we tried react redirect, but it broke
-      // redirect('/dashboard');
-      window.location.replace('/dashboard')
+      navigate('/dashboard');
     } catch (e) {
       console.log(e);
     }
@@ -34,9 +42,20 @@ function LoginForm() {
     });
   };
 
+  const validateEmail = (email) => {
+    const regex = /^\S+@\S+.\S+$/;
+    return regex.test(email);
+  };
+
+  const isEmailValid = validateEmail(formState.email);
 
   return (
-    <div className="container login-form-container" style={{maxWidth: '960px'}}>
+    <div className="container login-form-container" style={{ maxWidth: '960px' }}>
+      {showLoggedInMessage && (
+        <div className="alert alert-warning" role="alert">
+          You are already logged in, redirecting to the dashboard...
+        </div>
+      )}
       <div className="row justify-content-center my-3">
         <div className="col-md-6 col-lg-8">
           <div className="text-center">
@@ -44,7 +63,7 @@ function LoginForm() {
             <form onSubmit={handleFormSubmit}>
               <div className="my-3 container-form-login">
                 <div className="my-3 form-group">
-                  <label htmlFor="email" className="form-label">Email address:</label>
+                  <label htmlFor="email" className="form-label">Email:</label>
                   <input
                     placeholder="youremail@test.com"
                     name="email"
@@ -52,7 +71,11 @@ function LoginForm() {
                     id="email"
                     className="form-control"
                     onChange={handleChange}
+                    required
                   />
+                  {formState.email && !isEmailValid && (
+                    <p className="text-danger">Please enter a valid email address.</p>
+                  )}
                 </div>
                 <div className="form-group my-3">
                   <label htmlFor="pwd" className="form-label">Password:</label>

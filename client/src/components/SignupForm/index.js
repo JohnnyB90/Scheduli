@@ -5,7 +5,7 @@ import { ADD_USER } from "../../utils/mutations";
 import InputMask from "react-input-mask";
 import "./signUp.css"
 
-function SignupForm() {
+function SignupForm({ handleToggle }) {
   const [formState, setFormState] = useState({
     firstName: '',
     lastName: '',

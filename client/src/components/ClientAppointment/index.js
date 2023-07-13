@@ -153,7 +153,7 @@ export default function ClientAppointment() {
   }
 
   return (
-    <section className="container">
+    <section className="container mobile">
       <div className="row justify-content-center m-3">
         <div className="col-md-6 col-lg-8">
           <div className="p-2 my-3 appt-container" id="header-color">

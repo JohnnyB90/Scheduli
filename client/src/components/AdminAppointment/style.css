@@ -55,3 +55,36 @@
 .conf-body {
   background-color: #E5BA73;
 }
+
+@media (max-width: 1284px) {
+  .container.mobile {
+    margin-top: 0;
+    margin-bottom: 0;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .row.justify-content-center.m-3,
+  .row.justify-content-center > div[class^="col-"].m-3 {
+    margin: 0;
+  }
+
+  .col-md-6.col-lg-8 {
+    padding: 0;
+  }
+
+  .appt-container {
+    background-color: #e5ba73;
+    border-radius: 2.5%;
+    padding: 0;
+  }
+  
+  .p-2.m-3.appt-container {
+    margin: 0;
+  }
+
+  .m-3 {
+    margin: 0;
+  }
+}

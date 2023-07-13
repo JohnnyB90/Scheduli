@@ -94,7 +94,7 @@ export default function MyCalendar() {
   if (error) return `Error! ${error.message}`;
 
   return (
-    <div className="calendar-container">
+    <div className="calendar-container" style={{ paddingTop: 15 }}>
       <FullCalendar {...calendarConfig} />
     </div>
   );

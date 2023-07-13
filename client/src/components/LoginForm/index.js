@@ -106,6 +106,6 @@ function LoginForm({ handleToggle }) {
       </div>
     </div>
   );
-}
+} 
 
 export default LoginForm;

@@ -204,6 +204,6 @@ function SignupForm({ handleToggle }) {
       </div>
     </div>
   );
-}
+} 
 
 export default SignupForm;

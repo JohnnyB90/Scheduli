@@ -11,15 +11,6 @@ function EntryForm() {
     setIsLogin(!isLogin);
   };
 
-  // return (
-  //   <div>
-  //     <button onClick={handleToggle}
-  //     className="my-3 btn justify-content-center login-switch-button">
-  //       {isLogin ? 'Go to Signup' : 'Go to Login'}
-  //     </button>
-  //     {isLogin ? <LoginForm /> : <SignupForm />}
-  //   </div>
-  // );
   return (
     <div>
       {isLogin ? 

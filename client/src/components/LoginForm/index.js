@@ -96,8 +96,7 @@ function LoginForm({ handleToggle }) {
                   ) : null}
                 </div>
                 <div className="form-group">
-                  <button type="submit">Login</button>
-                  <button type="login" onClick={handleToggle}>Go to Signup</button>
+                  <button type="submit" className="custom-btn">Submit</button>
                 </div>
               </div>
             </form>

@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { UPDATE_USER } from "../../utils/mutations";
 import { QUERY_USER } from "../../utils/queries";
 import { useNavigate } from "react-router-dom";
+import AuthService from '../../utils/auth';
 import InputMask from "react-input-mask";
 import "./style.css";
 
@@ -64,7 +65,14 @@ const FormField = ({ field, displayName, value, onChange }) => {
 
 export default function AccountSettings() {
   const navigate = useNavigate();
-  const { loading, error, data } = useQuery(QUERY_USER);
+  const decodedToken = AuthService.getProfile();
+  const userId = decodedToken ? decodedToken.data._id : null;
+  const { loading, error, data } = useQuery(QUERY_USER, {
+    fetchPolicy: 'network-only',
+    variables: { userId },
+  });
+
+  
   const [showUpdateSettings, setShowUpdateSettings] = useState(false);
   const [formState, setFormState] = useState({
     firstName: loading || error ? "" : data.user.firstName,
@@ -78,7 +86,7 @@ export default function AccountSettings() {
     state: loading || error ? "" : data.user.state,
     country: loading || error ? "" : data.user.country,
   });
-  console.log(loading, error, data);
+  console.log(formState);
 
   const displayNameMap = {
     firstName: "First Name",
@@ -307,7 +315,7 @@ export default function AccountSettings() {
                     )}
                   </form>
                   <div className="d-grid gap-2">
-                  <button
+                  <button type="submit"
                     className="custom-btn acc-button mt-3"
                     onClick={handleCancelUpdate}
                   >

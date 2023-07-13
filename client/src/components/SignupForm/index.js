@@ -191,8 +191,7 @@ function SignupForm({ handleToggle }) {
                   />
                 </div>
                 <div className="">
-                  <button type="submit">Signup</button>
-                  <button type="login" onClick={handleToggle}>Go to Login</button>
+                  <button className="btn-submit custom-btn" type="submit">Submit</button>
                 </div>
               </div>
             </div>

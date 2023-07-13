@@ -68,6 +68,7 @@ code {
     border-radius: 4px;
     background-color: #FFF2CC;
     max-width: 960px;
+    margin-top: 50px;
 }
 
 .login-form-container h2 {
@@ -103,6 +104,11 @@ button[type="submit"] {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    margin: 15px;
+    margin-right: 20px;
+    margin-left: 12px;
+    padding-left: 38px;
+    padding-right: 38px;
 }
 
 button[type="submit"]:hover {
@@ -217,6 +223,16 @@ button[type="submit"]:hover {
 
 .custom-btn:hover {
   transform: scale(0.85);
+}
+
+button[type="login"] {
+  padding: 8px 12px;
+  background-color: #4A403A;
+  color: #FFF2CC;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 5px;
 }
 /*!***********************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./client/src/pages/styles/entryFormStyles.css ***!
@@ -1050,6 +1066,16 @@ button[type="submit"]:hover {
 
 .conf-body {
   background-color: #E5BA73;
+}
+
+@media (max-width: 1284px) {
+  .container.mobile {
+    margin-top: 0;
+    margin-bottom: 0;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 /*!************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./client/src/components/DashboardNav/style.css ***!

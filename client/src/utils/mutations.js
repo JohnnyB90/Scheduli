@@ -1,7 +1,8 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const CREATE_APPOINTMENT = gql`
   mutation createAppointment(
+    $userId: ID!
     $firstName: String!
     $lastName: String!
     $appointmentDate: String!
@@ -11,6 +12,7 @@ export const CREATE_APPOINTMENT = gql`
     $message: String!
   ) {
     createAppointment(
+      userId: $userId
       firstName: $firstName
       lastName: $lastName
       appointmentDate: $appointmentDate
@@ -38,7 +40,6 @@ export const DELETE_APPOINTMENT = gql`
     }
   }
 `;
-
 
 export const LOGIN = gql`
   mutation login($email: String!, $password: String!) {
@@ -85,9 +86,9 @@ export const UPDATE_USER = gql`
 
 export const UPDATE_PASSWORD = gql`
   mutation updatePassword(
-  $currentPassword: String! 
-  $newPassword: String!
-  $confirmPassword: String!
+    $currentPassword: String!
+    $newPassword: String!
+    $confirmPassword: String!
   ) {
     updatePassword(
       currentPassword: $currentPassword
@@ -98,7 +99,6 @@ export const UPDATE_PASSWORD = gql`
     }
   }
 `;
-
 
 export const ADD_USER = gql`
   mutation addUser(

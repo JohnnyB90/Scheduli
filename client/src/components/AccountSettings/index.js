@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { UPDATE_USER } from "../../utils/mutations";
 import { QUERY_USER } from "../../utils/queries";
@@ -67,11 +67,10 @@ export default function AccountSettings() {
   const navigate = useNavigate();
   const decodedToken = AuthService.getProfile();
   const userId = decodedToken ? decodedToken.data._id : null;
-  const { loading, error, data } = useQuery(QUERY_USER, {
+  const { loading, error, data, refetch } = useQuery(QUERY_USER, {
     fetchPolicy: 'network-only',
     variables: { userId },
   });
-
   
   const [showUpdateSettings, setShowUpdateSettings] = useState(false);
   const [formState, setFormState] = useState({
@@ -86,7 +85,6 @@ export default function AccountSettings() {
     state: loading || error ? "" : data.user.state,
     country: loading || error ? "" : data.user.country,
   });
-  console.log(formState);
 
   const displayNameMap = {
     firstName: "First Name",
@@ -107,6 +105,18 @@ export default function AccountSettings() {
   const [validationError, setValidationError] = useState("");
 
   const [updateUser] = useMutation(UPDATE_USER);
+
+  // Function to generate the appointment URL
+  const getAppointmentUrl = (userId) => {
+    return `http://localhost:3000/appointment/${userId}`;
+  };
+
+  useEffect(() => {
+    if (successMessage) {
+      // Refresh the user data after successful update
+      refetch();
+    }
+  }, [successMessage, refetch]);
 
   if (loading) {
     // Add loading state if needed
@@ -216,6 +226,8 @@ export default function AccountSettings() {
               <h1 className="card-title acc-text text-center mb-3">
                 Account Settings
               </h1>
+               {/* Add the generated URL here */}
+               <p>Share this URL for client appointments: <a href={getAppointmentUrl(userId)}>{getAppointmentUrl(userId)}</a></p>
 
             {/* Display current user settings */}
             {!showUpdateSettings && (

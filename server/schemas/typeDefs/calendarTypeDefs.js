@@ -4,12 +4,13 @@ const calendarTypeDefs = gql`
   scalar DateTime
 
   type Query {
-    appointments: [Appointment]
-    appointment(_id: ID!): Appointment
+    appointments(userId: ID): [Appointment]
+    appointment(_id: ID): Appointment
   }
 
   type Appointment {
-    _id: ID!
+    _id: ID
+    userId: ID
     firstName: String!
     lastName: String!
     appointmentDate: String!
@@ -21,6 +22,7 @@ const calendarTypeDefs = gql`
 
   extend type Mutation {
     createAppointment(
+      userId: ID
       firstName: String!
       lastName: String!
       appointmentDate: String!

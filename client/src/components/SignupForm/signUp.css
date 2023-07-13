@@ -77,3 +77,13 @@
 .btn-primary:hover {
   background-color: white;
 }
+
+button[type="login"] {
+  padding: 8px 12px;
+  background-color: #4A403A;
+  color: #FFF2CC;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 5px;
+}

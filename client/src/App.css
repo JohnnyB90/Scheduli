@@ -37,3 +37,8 @@
     transform: rotate(360deg);
   }
 }
+
+.login-switch-button {
+  background-color: #4A403A;
+  color: #FFF4E0;
+}

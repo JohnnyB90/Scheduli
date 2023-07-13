@@ -120,9 +120,9 @@ export default function ClientAppointment() {
   if (submitted) {
     return (
       <section className="container">
-        <div className="row justify-content-center m-3">
+        <div className="row justify-content-center my-3">
           <div className="col-md-6 col-lg-8">
-            <div className="p-2 m-3 conf-header-container">
+          <div className="p-2 my-3 conf-header-container">
               <h1 className="p-3 m-0 conf-header">
                 Your appointment has been scheduled!
               </h1>
@@ -156,7 +156,7 @@ export default function ClientAppointment() {
     <section className="container">
       <div className="row justify-content-center m-3">
         <div className="col-md-6 col-lg-8">
-          <div className="p-2 m-3 appt-container" id="header-color">
+          <div className="p-2 my-3 appt-container" id="header-color">
             <div className="m-3 p-5 appt-background">
               <h1 className="text-center appt-text">Book an Appointment</h1>
               <form className="mt-3" onSubmit={handleSubmit}>

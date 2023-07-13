@@ -1,0 +1,52 @@
+.login-form-container {
+    margin: auto 0;
+    border: 10px solid #E5BA73;
+    border-radius: 4px;
+    background-color: #FFF2CC;
+    max-width: 960px;
+}
+
+.login-form-container h2 {
+
+    color: #4f200d;
+}
+
+.container-form-login {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #4A403A;
+    border-radius: 5px;
+    background-color: #FFF2CC;
+  }
+
+label {
+    font-weight: bold;
+    color: #4f200d;
+}
+
+input[type="email"],
+input[type="password"] {
+    padding: 8px;
+    border: 1px solid #E5BA73;
+    border-radius: 4px;
+}
+
+button[type="submit"] {
+    padding: 8px 12px;
+    background-color: #4A403A;
+    color: #FFF2CC;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #4f200d;
+}
+
+@media (min-width: 992px) {
+    .container {
+        max-width: 960px;
+    }
+}

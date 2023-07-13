@@ -40,7 +40,7 @@ export default function ClientAppointment() {
   const [errorMessage, setErrorMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  const { userId } = useParams(); // Retrieve the userId from the URL parameters
+  const { userId } = useParams();
 
   const [createAppointment] = useMutation(CREATE_APPOINTMENT);
 
@@ -96,7 +96,7 @@ export default function ClientAppointment() {
     try {
       const { data } = await createAppointment({
         variables: {
-          userId, // Pass the userId obtained from the URL parameters
+          userId,
           firstName,
           lastName,
           appointmentDate: formattedDate,

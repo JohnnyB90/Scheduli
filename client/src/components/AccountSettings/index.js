@@ -108,7 +108,7 @@ export default function AccountSettings() {
 
   // Function to generate the appointment URL
   const getAppointmentUrl = (userId) => {
-    return `http://localhost:3000/appointment/${userId}`;
+    return `https://scheduli-adfba105dbbc.herokuapp.com/appointment/${userId}`;
   };
 
   useEffect(() => {

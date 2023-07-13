@@ -1,37 +1,40 @@
-import React from'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate
+} from "react-router-dom";
 import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
   createHttpLink,
-} from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
+import Calendar from "./components/Calendar";
+import EntryForm from "./pages/EntryForm";
+import ClientAppointment from "./components/ClientAppointment";
+import Dashboard from "./pages/Dashboard";
+import AdminAppointment from "./components/AdminAppointment";
+import authService from "./utils/auth";
 
-import Calendar from './components/Calendar';
-import EntryForm from './pages/EntryForm';
-import ClientAppointment from './components/ClientAppointment';
-import Dashboard from './pages/Dashboard';
-import AdminAppointment from './components/AdminAppointment';
-
-import './App.css';
+import "./App.css";
 
 const httpLink = createHttpLink({
-  uri: '/graphql',
+  uri: "/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
-    
-    const token = localStorage.getItem('id_token');
-    
-    return {
-      headers: {
-        ...headers,
-        authorization: token ? `Bearer ${token}` : '',
-      },
-    };
-  }
-);
+  const token = localStorage.getItem("id_token");
+
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+});
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
@@ -39,21 +42,53 @@ const client = new ApolloClient({
 });
 
 function App() {
-  return(
+  const [authenticated, setAuthenticated] = useState(authService.loggedIn());
+
+  return (
     <ApolloProvider client={client}>
-      <Router>
-        <div className="App">
+      <div className="App">
+        <Router>
           <Routes>
+            {/* Unauthenticated routes available */}
             <Route path="/" element={<EntryForm />} />
-            <Route path="/calendar" element={<Calendar />} />
-            <Route path='/appointment' element={<ClientAppointment />} />
-            <Route path='/admin-appointment' element={<AdminAppointment />} />
-            <Route path='/dashboard' element={<Dashboard/>} />
+            <Route path="/appointment" element={<ClientAppointment />}/>
+            {/* Authenticated Routes */}
+            <Route
+              path="/calendar"
+              element={
+                authenticated ? (
+                  <Calendar />
+                ) : (
+                  <Navigate to="/" replace />
+                )
+              }
+            />
+            <Route
+              path="/admin-appointment"
+              element={
+                authenticated ? (
+                  <AdminAppointment />
+                ) : (
+                  <Navigate to="/" replace />
+                )
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                authenticated ? (
+                  <Dashboard />
+                ) : (
+                  <Navigate to="/" replace />
+                )
+              }
+            />
           </Routes>
-        </div>
-      </Router>
+        </Router>
+      </div>
     </ApolloProvider>
   );
 }
 
 export default App;
+

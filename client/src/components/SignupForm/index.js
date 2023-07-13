@@ -5,7 +5,7 @@ import { ADD_USER } from "../../utils/mutations";
 import InputMask from "react-input-mask";
 import "./signUp.css"
 
-function SignupForm() {
+function SignupForm( {handleToggle }) {
   const [formState, setFormState] = useState({
     firstName: '',
     lastName: '',
@@ -191,7 +191,8 @@ function SignupForm() {
                   />
                 </div>
                 <div className="">
-                  <button className="btn-submit custom-btn" type="submit">Submit</button>
+                <button type="submit" className="custom-btn">Signup</button>
+                  <button type="submit" className="custom-btn" onClick={handleToggle}>Go to Login</button>
                 </div>
               </div>
             </div>

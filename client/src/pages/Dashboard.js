@@ -9,9 +9,9 @@ import AdminAppointment from '../components/AdminAppointment';
 function Dashboard() {
     const [navLinks] = useState([
         { name: "Calendar" },
-        { name: "View Appointments" },
+        // { name: "View Appointments" },
         { name: "Create Appointment"},
-        { name: "Telemetry" },
+        // { name: "Telemetry" },
         { name: "Account Settings" },
         { name: "Password Settings" },
     ]);
@@ -27,11 +27,11 @@ function Dashboard() {
             />
             <main>
                 {currentNav === navLinks[0] && <Calendar></Calendar>}
-                {currentNav === navLinks[1] && <></>}
-                {currentNav === navLinks[2] && <AdminAppointment></AdminAppointment>}
-                {currentNav === navLinks[3] && <></>}
-                {currentNav === navLinks[4] && <AccountSettings></AccountSettings>}
-                {currentNav === navLinks[5] && <PasswordSettings></PasswordSettings>}
+                {/* {currentNav === navLinks[1] && <></>} */}
+                {currentNav === navLinks[1] && <AdminAppointment></AdminAppointment>}
+                {/* {currentNav === navLinks[3] && <></>} */}
+                {currentNav === navLinks[2] && <AccountSettings></AccountSettings>}
+                {currentNav === navLinks[3] && <PasswordSettings></PasswordSettings>}
             </main>
         </div>
     )

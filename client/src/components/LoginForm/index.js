@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Auth from '../../utils/auth';
 import { useMutation } from '@apollo/client';
 import { LOGIN } from '../../utils/mutations';
+import './logIn.css'
 
 function LoginForm() {
   const [formState, setFormState] = useState({ email: '', password: '' });
@@ -48,47 +49,60 @@ function LoginForm() {
   const isEmailValid = validateEmail(formState.email);
 
   return (
-    <div className="container my-1">
+    <div className="container login-form-container" style={{ maxWidth: '960px' }}>
       {showLoggedInMessage && (
         <div className="alert alert-warning" role="alert">
           You are already logged in. Redirecting to the dashboard...
         </div>
       )}
-      <h2>Login</h2>
-      <form onSubmit={handleFormSubmit}>
-        <div className="flex-row space-between my-2">
-          <label htmlFor="email">Email:</label>
-          <input
-            placeholder="youremail@test.com"
-            name="email"
-            type="email"
-            id="email"
-            onChange={handleChange}
-            required
-          />
-          {formState.email && !isEmailValid && (
-            <p className="text-danger">Please enter a valid email address.</p>
-          )}
-        </div>
-        <div className="flex-row space-between my-2">
-          <label htmlFor="pwd">Password:</label>
-          <input
-            placeholder="******"
-            name="password"
-            type="password"
-            id="pwd"
-            onChange={handleChange}
-          />
-        </div>
-        {error ? (
-          <div>
-            <p className="error-text">The provided credentials are incorrect</p>
+      <div className="row justify-content-center my-3">
+        <div className="col-md-6 col-lg-8">
+          <div className="text-center">
+            <h2 className="title">Login</h2>
+            <form onSubmit={handleFormSubmit}>
+              <div className="my-3 container-form-login">
+                <div className="my-3 form-group">
+                  <label htmlFor="email" className="form-label">Email:</label>
+                  <input
+                    placeholder="youremail@test.com"
+                    name="email"
+                    type="email"
+                    id="email"
+                    className="form-control"
+                    onChange={handleChange}
+                    required
+                  />
+                  {formState.email && !isEmailValid && (
+                    <p className="text-danger">Please enter a valid email address.</p>
+                  )}
+                </div>
+                <div className="form-group my-3">
+                  <label htmlFor="pwd" className="form-label">Password:</label>
+                  <input
+                    placeholder="******"
+                    name="password"
+                    type="password"
+                    id="pwd"
+                    className="form-control"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group">
+
+                  {error ? (
+                    <div>
+                      <p className="error-text">The provided credentials are incorrect</p>
+                    </div>
+                  ) : null}
+                </div>
+                <div className="form-group">
+                  <button type="submit">Submit</button>
+                </div>
+              </div>
+            </form>
           </div>
-        ) : null}
-        <div className="flex-row flex-end">
-          <button type="submit">Submit</button>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

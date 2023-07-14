@@ -17,7 +17,7 @@ const calendarTypeDefs = gql`
     appointmentTime: String!
     email: String!
     phone: String!
-    message: String!
+    message: String
   }
 
   extend type Mutation {
@@ -29,7 +29,7 @@ const calendarTypeDefs = gql`
       appointmentTime: String!
       email: String!
       phone: String!
-      message: String!
+      message: String
     ): Appointment!
     deleteAppointment(_id: ID!): Appointment
   }

@@ -20,8 +20,9 @@ let transporter = nodeMailer.createTransport({
 
 router.post('/', async (req, res) => {
   try {
+    console.log("reached post server")
     console.log(req.body);
-    const { email, firstName, lastName, appointmentDate, appointmentTime, phone, message } = req.body;
+    const { user, email, firstName, lastName, appointmentDate, appointmentTime, phone, message } = req.body;
 
     const timeFormat = /^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/;
     if (!appointmentTime.match(timeFormat)) {
@@ -29,6 +30,7 @@ router.post('/', async (req, res) => {
     }
 
     const newAppointment = await Appointment.create({
+      user,
       firstName,
       lastName,
       email,

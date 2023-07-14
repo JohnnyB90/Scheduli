@@ -58,6 +58,10 @@ code {
   .custom-btn:hover {
     transform: scale(0.85);
   }
+
+  .model-background {
+    background-color: #FFF2CC;
+  }
   
 /*!*********************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./client/src/components/LoginForm/logIn.css ***!

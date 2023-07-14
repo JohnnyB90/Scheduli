@@ -87,7 +87,7 @@ export default function ClientAppointment() {
     }));
   }
 
-  async function handleSubmit(event) {
+    async function handleSubmit(event) {
     event.preventDefault();
 
     const { firstName, lastName, email, phone, message, dateTime } = formState;
@@ -106,7 +106,29 @@ export default function ClientAppointment() {
           message,
         },
       });
+      
       if (data) {
+        const response = await fetch('/api/appointment_details', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user: userId,
+            email,
+            firstName,
+            lastName,
+            appointmentDate: formattedDate,
+            appointmentTime: formattedTime,
+            phone,
+            message,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Something went wrong with the email');
+        }
+
         setSuccessMessage("Appointment created successfully");
         setErrorMessage("");
         setTimeout(() => {
@@ -122,6 +144,7 @@ export default function ClientAppointment() {
 
     setRemainingChars(maxMessageLength);
   }
+
 
   if (submitted) {
     return (

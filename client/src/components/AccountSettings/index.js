@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { UPDATE_USER } from "../../utils/mutations";
 import { QUERY_USER } from "../../utils/queries";
 import { useNavigate } from "react-router-dom";
-import AuthService from '../../utils/auth';
+import AuthService from "../../utils/auth";
 import InputMask from "react-input-mask";
+import Button from "react-bootstrap/Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClipboard } from "@fortawesome/free-solid-svg-icons";
 import "./style.css";
 
 const FormField = ({ field, displayName, value, onChange }) => {
@@ -68,10 +71,10 @@ export default function AccountSettings() {
   const decodedToken = AuthService.getProfile();
   const userId = decodedToken ? decodedToken.data._id : null;
   const { loading, error, data, refetch } = useQuery(QUERY_USER, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: "network-only",
     variables: { userId },
   });
-  
+
   const [showUpdateSettings, setShowUpdateSettings] = useState(false);
   const [formState, setFormState] = useState({
     firstName: loading || error ? "" : data.user.firstName,
@@ -217,6 +220,22 @@ export default function AccountSettings() {
   const totalSettings = settingsKeys.length;
   const middleIndex = Math.ceil(totalSettings / 2);
 
+  const handleShareCalendar = () => {
+    const appointmentUrl = getAppointmentUrl(userId);
+
+    // Copy the appointment URL to the clipboard
+    navigator.clipboard
+      .writeText(appointmentUrl)
+      .then(() => {
+        // Show success message or perform any other actions
+        console.log("Appointment URL copied to clipboard!");
+      })
+      .catch((error) => {
+        // Show error message or handle the error
+        console.error("Error copying appointment URL to clipboard:", error);
+      });
+  };
+
   return (
     <section className="container">
       <div className="my-3 row justify-content-center">
@@ -226,13 +245,21 @@ export default function AccountSettings() {
               <h1 className="card-title acc-text text-center mb-3">
                 Account Settings
               </h1>
-               {/* Add the generated URL here */}
-               <p>Share this URL for client appointments: <a href={getAppointmentUrl(userId)}>{getAppointmentUrl(userId)}</a></p>
 
-            {/* Display current user settings */}
-            {!showUpdateSettings && (
+              {/* Display current user settings */}
+              {!showUpdateSettings && (
                 <div>
                   <h2>Current User Settings</h2>
+                  {/* Add the generated URL here */}
+                  <div className="share-calendar-button">
+                    <button
+                      className="share-calendar-button-icon"
+                      onClick={handleShareCalendar}
+                    >
+                      <FontAwesomeIcon icon={faClipboard} />
+                    </button>
+                    <p>Click the clipboard to share your calendar</p>
+                  </div>
                   <div className="row">
                     <div className="col-md-6">
                       {settingsKeys.slice(0, middleIndex).map((key) => (
@@ -271,12 +298,12 @@ export default function AccountSettings() {
                     <h2>Update your Settings</h2>
                     <div className="mb-3">
                       <div>
-                      <label
-                        htmlFor="selectedSetting"
-                        className="form-label acc-text p-3"
-                      >
-                        Choose Setting to Update
-                      </label>
+                        <label
+                          htmlFor="selectedSetting"
+                          className="form-label acc-text p-3"
+                        >
+                          Choose Setting to Update
+                        </label>
                       </div>
                       <select
                         id="selectedSetting"
@@ -306,7 +333,10 @@ export default function AccountSettings() {
                       />
                     )}
                     <div className="d-grid gap-2">
-                      <button type="submit" className="custom-btn acc-button mt-3">
+                      <button
+                        type="submit"
+                        className="custom-btn acc-button mt-3"
+                      >
                         Save
                       </button>
                     </div>
@@ -327,12 +357,13 @@ export default function AccountSettings() {
                     )}
                   </form>
                   <div className="d-grid gap-2">
-                  <button type="submit"
-                    className="custom-btn acc-button mt-3"
-                    onClick={handleCancelUpdate}
-                  >
-                    Back
-                  </button>
+                    <button
+                      type="submit"
+                      className="custom-btn acc-button mt-3"
+                      onClick={handleCancelUpdate}
+                    >
+                      Back
+                    </button>
                   </div>
                 </div>
               )}

@@ -21,7 +21,16 @@ const DELETE_APPOINTMENT = gql`
 `;
 
 export default function MyCalendar() {
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState(() => {
+    // Get the token from authService
+    const token = authService.getToken();
+
+    // Decode the token to get the user ID
+    const decodedToken = jwt_decode(token);
+    const userIdInit = decodedToken.data._id;
+
+      return userIdInit;
+  });
 
   const [deleteAppointment] = useMutation(DELETE_APPOINTMENT);
   const [events, setEvents] = useState([]);
@@ -33,7 +42,6 @@ export default function MyCalendar() {
     // Decode the token to get the user ID
     const decodedToken = jwt_decode(token);
     const userId = decodedToken.data._id;
-    // console.log(userId);
 
     setUserId(userId);
   }, []);

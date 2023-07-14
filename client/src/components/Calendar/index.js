@@ -9,6 +9,7 @@ import authService from "../../utils/auth";
 import { GET_ALL_APPOINTMENTS } from "../../utils/queries";
 import { useQuery, useMutation } from "@apollo/client";
 import { gql } from "graphql-tag";
+import { Modal, Button } from "react-bootstrap";
 
 import "./calendar.css";
 
@@ -21,10 +22,21 @@ const DELETE_APPOINTMENT = gql`
 `;
 
 export default function MyCalendar() {
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState(() => {
+    // Get the token from authService
+    const token = authService.getToken();
+
+    // Decode the token to get the user ID
+    const decodedToken = jwt_decode(token);
+    const userIdInit = decodedToken.data._id;
+
+    return userIdInit;
+  });
 
   const [deleteAppointment] = useMutation(DELETE_APPOINTMENT);
   const [events, setEvents] = useState([]);
+  const [modalShow, setModalShow] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState(null);
 
   useEffect(() => {
     // Get the token from authService
@@ -33,7 +45,6 @@ export default function MyCalendar() {
     // Decode the token to get the user ID
     const decodedToken = jwt_decode(token);
     const userId = decodedToken.data._id;
-    // console.log(userId);
 
     setUserId(userId);
   }, []);
@@ -72,18 +83,20 @@ export default function MyCalendar() {
     refetch();
   }, [refetch]);
 
-  const handleEventClick = async ({ event }) => {
-    const shouldDelete = window.confirm(
-      "Are you sure you want to delete this event?"
-    );
+  const handleEventClick = ({ event }) => {
+    setEventToDelete(event);
+    setModalShow(true);
+  };
 
-    if (shouldDelete) {
-      try {
-        await deleteAppointment({ variables: { id: event.id } });
-        setEvents((prevEvents) => prevEvents.filter((e) => e.id !== event.id));
-      } catch (error) {
-        console.error("Error deleting appointment", error);
-      }
+  const handleConfirm = async () => {
+    try {
+      await deleteAppointment({ variables: { id: eventToDelete.id } });
+      setEvents((prevEvents) =>
+        prevEvents.filter((e) => e.id !== eventToDelete.id)
+      );
+      setModalShow(false);
+    } catch (error) {
+      console.error("Error deleting appointment", error);
     }
   };
 
@@ -104,6 +117,20 @@ export default function MyCalendar() {
 
   return (
     <div className="calendar-container" style={{ paddingTop: 15 }}>
+      <Modal show={modalShow} onHide={() => setModalShow(false)}> 
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmation</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to delete this event?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" type="submit" className="custom-btn" onClick={() => setModalShow(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" type="submit" className="custom-btn" onClick={handleConfirm}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <FullCalendar {...calendarConfig} />
     </div>
   );

@@ -38,4 +38,8 @@
   .custom-btn:hover {
     transform: scale(0.85);
   }
+
+  .model-background {
+    background-color: #FFF2CC;
+  }
   

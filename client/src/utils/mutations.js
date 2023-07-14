@@ -9,7 +9,7 @@ export const CREATE_APPOINTMENT = gql`
     $appointmentTime: String!
     $email: String!
     $phone: String!
-    $message: String!
+    $message: String
   ) {
     createAppointment(
       userId: $userId

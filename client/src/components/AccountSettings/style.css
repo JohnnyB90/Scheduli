@@ -27,4 +27,24 @@
   .custom-btn:hover {
     transform: scale(0.85);
   }
+
+  .share-calendar-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .share-calendar-button-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .share-calendar-button p {
+    margin: 0;
+  }
+  
+  
   

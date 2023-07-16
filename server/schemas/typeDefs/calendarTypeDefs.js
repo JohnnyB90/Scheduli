@@ -6,6 +6,7 @@ const calendarTypeDefs = gql`
   type Query {
     appointments(userId: ID): [Appointment]
     appointment(_id: ID): Appointment
+    appointmentByDateTime(appointmentDate: String!, appointmentTime: String!): Appointment
   }
 
   type Appointment {

@@ -107,7 +107,7 @@ export default function MyCalendar() {
       setTimeout(() => {
         // Perform the redirect here
         setShowSuccessModal(false);
-      }, 2000);
+      }, 800);
     } catch (error) {
       console.error("Error deleting appointment", error);
     }

@@ -10,7 +10,8 @@ import { TextField } from "@mui/material";
 import InputMask from "react-input-mask";
 import format from "date-fns/format";
 import { useParams } from "react-router-dom";
-
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 import "./style.css";
 
 export default function ClientAppointment() {
@@ -38,9 +39,9 @@ export default function ClientAppointment() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
-
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
   const { userId } = useParams();
-
   const [createAppointment] = useMutation(CREATE_APPOINTMENT);
 
   useEffect(() => {
@@ -114,10 +115,10 @@ export default function ClientAppointment() {
       }
     } catch (error) {
       console.error("Error creating appointment", error);
-      setErrorMessage("Error creating appointment");
+      setModalMessage("This Appointment date and time is already reserved by another client.");
+      setShowErrorModal(true);
       setSuccessMessage("");
     }
-
     setRemainingChars(maxMessageLength);
   }
 
@@ -328,6 +329,17 @@ export default function ClientAppointment() {
           </div>
         </div>
       </div>
+      <Modal show={showErrorModal} onHide={() => setShowErrorModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>We apologize</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="text-center">{modalMessage}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowErrorModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </section>
   );
 }

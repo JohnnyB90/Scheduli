@@ -7,6 +7,8 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { useMutation } from "@apollo/client";
 import { CREATE_APPOINTMENT } from "../../utils/mutations";
 import { TextField } from "@mui/material";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import InputMask from "react-input-mask";
@@ -40,7 +42,8 @@ export default function ClientAppointment() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
-
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
   const [createAppointment] = useMutation(CREATE_APPOINTMENT);
 
   useEffect(() => {
@@ -117,21 +120,23 @@ export default function ClientAppointment() {
       if (data) {
         console.log(data);
         // ... do something with the data if needed
-        setSuccessMessage("Appointment created successfully");
+        setSuccessMessage("Appointment created successfully. Now redirecting you back to the calendar...");
         setErrorMessage("");
         setSubmitted(true);
 
         // Redirect to calendar route after 2 seconds
         setTimeout(() => {
-          navigate("/dashboard");
-        }, 2000);
+          window.location.href = "/dashboard";
+        }, 1000);        
       }
     } catch (error) {
       console.error("Error creating appointment", error);
-      setErrorMessage("Error creating appointment");
+      setModalMessage(
+        "This Appointment date and time is already reserved by another client."
+      );
+      setShowErrorModal(true);
       setSuccessMessage("");
     }
-
     setRemainingChars(maxMessageLength);
   }
 
@@ -306,6 +311,19 @@ export default function ClientAppointment() {
           </div>
         </div>
       </div>
+      <Modal show={showErrorModal} onHide={() => setShowErrorModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            We apologize
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="text-center">{modalMessage}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowErrorModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </section>
   );
 }

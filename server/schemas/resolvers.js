@@ -27,6 +27,9 @@ const resolvers = {
     appointment: async (_, { _id }) => {
       return await Appointment.findById(_id);
     },
+    appointmentByDateTime: async (_, { appointmentDate, appointmentTime }) => {
+      return await Appointment.findOne({ appointmentDate, appointmentTime });
+    },
   },
   Mutation: {
     createAppointment: async (
@@ -47,15 +50,25 @@ const resolvers = {
       if (!userId) {
         throw new AuthenticationError("User ID not provided");
       }
-
+  
       try {
         // Find the user based on the userId
         const user = await User.findById(userId);
-
+  
         if (!user) {
           throw new Error("User not found");
         }
-
+  
+        // Check if there is already an appointment at the given date and time
+        const existingAppointment = await Appointment.findOne({
+          appointmentDate,
+          appointmentTime,
+        });
+  
+        if (existingAppointment) {
+          throw new Error('This appointment time is already taken.');
+        }
+  
         // Create the appointment and associate it with the user
         const appointment = new Appointment({
           user: userId,
@@ -67,9 +80,9 @@ const resolvers = {
           phone,
           message,
         });
-
+  
         const createdAppointment = await appointment.save();
-
+  
         // Create the transporter object using the default SMTP transport
         let transporter = nodeMailer.createTransport({
           service: 'gmail',
@@ -81,7 +94,7 @@ const resolvers = {
             refreshToken: process.env.REACT_APP_OAUTH_REFRESH_TOKEN,
           },
         });
-
+  
         // Define email options
         const mailOptions = {
           from: process.env.REACT_APP_MAIL_USERNAME,
@@ -89,7 +102,7 @@ const resolvers = {
           subject: "Appointment Confirmation",
           text: `Hello ${firstName} ${lastName}, this is to confirm your appointment on ${appointmentDate} at ${appointmentTime}`,
         };
-
+  
         // Send the email
         transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
@@ -98,13 +111,14 @@ const resolvers = {
             console.log("Email sent: " + info.response);
           }
         });
-
+  
         return createdAppointment;
       } catch (error) {
         console.error("Error creating appointment", error);
-        throw new Error("Failed to create appointment");
+        throw new Error(error.message);
       }
     },
+  
     deleteAppointment: async (_, { _id }) => {
       try {
         const appointmentToDelete = await Appointment.findById(_id);

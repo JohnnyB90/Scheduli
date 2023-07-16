@@ -56,7 +56,6 @@ export default function MyCalendar() {
     variables: { userId },
   });
 
-  console.log(data); // Check if data is undefined or has a value
 
   useEffect(() => {
     if (data && data.appointments) {
@@ -67,7 +66,6 @@ export default function MyCalendar() {
           new Date()
         );
         const endDate = addMinutes(startDate, 30);
-        console.log(data.appointments);
         return {
           id: appointment._id,
           title: `${appointment.firstName} ${appointment.lastName}`,

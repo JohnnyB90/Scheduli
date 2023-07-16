@@ -60,8 +60,7 @@ export default function PasswordSettings() {
         newPassword: "",
         confirmPassword: "",
     });
-    console.log(currentPassword, newPassword, confirmPassword);
-}
+};
 
     return (
         <section className="container">

@@ -6,7 +6,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { useMutation } from "@apollo/client";
 import { CREATE_APPOINTMENT } from "../../utils/mutations";
-import { GET_ALL_APPOINTMENTS } from "../../utils/queries";
 import { TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
@@ -229,12 +228,9 @@ export default function ClientAppointment() {
                         ]}
                       >
                         <DateTimePicker
-                          renderInput={(props) => (
-                            <TextField
-                              {...props}
-                              label="Appointment Date and Time"
-                            />
-                          )}
+                          textField={
+                            <TextField label="Appointment Date and Time" />
+                          }
                           value={dateTime}
                           onChange={handleDateTimeChange}
                           minDate={new Date()}

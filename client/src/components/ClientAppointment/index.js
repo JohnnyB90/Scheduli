@@ -32,7 +32,6 @@ export default function ClientAppointment() {
     dateTime: initialDateTime,
   });
 
-
   const maxMessageLength = 300;
   const [remainingChars, setRemainingChars] = useState(maxMessageLength);
   const { firstName, lastName, email, phone, message, dateTime } = formState;
@@ -60,8 +59,6 @@ export default function ClientAppointment() {
     }
   }, [dateTime]);
 
-
-
   function handleChange(event) {
     const { name, value } = event.target;
 
@@ -87,7 +84,7 @@ export default function ClientAppointment() {
     }));
   }
 
-    async function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     const { firstName, lastName, email, phone, message, dateTime } = formState;
@@ -96,39 +93,18 @@ export default function ClientAppointment() {
     try {
       const { data } = await createAppointment({
         variables: {
-          userId,
-          firstName,
-          lastName,
+          userId: userId,
+          firstName: firstName,
+          lastName: lastName,
           appointmentDate: formattedDate,
           appointmentTime: formattedTime,
-          email,
-          phone,
-          message,
+          email: email,
+          phone: phone,
+          message: message,
         },
       });
-      
+
       if (data) {
-        const response = await fetch('/api/appointment_details', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            user: userId,
-            email,
-            firstName,
-            lastName,
-            appointmentDate: formattedDate,
-            appointmentTime: formattedTime,
-            phone,
-            message,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Something went wrong with the email');
-        }
-
         setSuccessMessage("Appointment created successfully");
         setErrorMessage("");
         setTimeout(() => {
@@ -145,13 +121,12 @@ export default function ClientAppointment() {
     setRemainingChars(maxMessageLength);
   }
 
-
   if (submitted) {
     return (
       <section className="container">
         <div className="row justify-content-center my-3">
           <div className="col-md-6 col-lg-8">
-          <div className="p-2 my-3 conf-header-container">
+            <div className="p-2 my-3 conf-header-container">
               <h1 className="p-3 m-0 conf-header">
                 Your appointment has been scheduled!
               </h1>

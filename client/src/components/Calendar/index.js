@@ -12,6 +12,7 @@ import { gql } from "graphql-tag";
 import { Modal, Button } from "react-bootstrap";
 
 import "./calendar.css";
+import { event } from "jquery";
 
 const DELETE_APPOINTMENT = gql`
   mutation DeleteAppointment($id: ID!) {
@@ -37,6 +38,7 @@ export default function MyCalendar() {
   const [events, setEvents] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [eventToDelete, setEventToDelete] = useState(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     // Get the token from authService
@@ -65,12 +67,18 @@ export default function MyCalendar() {
           new Date()
         );
         const endDate = addMinutes(startDate, 30);
-
+        console.log(data.appointments);
         return {
           id: appointment._id,
           title: `${appointment.firstName} ${appointment.lastName}`,
           start: startDate,
           end: endDate,
+          name: `${appointment.firstName} ${appointment.lastName}`,
+          email: `${appointment.email}`,
+          phoneNumber: `${appointment.phone}`,
+          appointmentDate: `${appointment.appointmentDate}`,
+          appointmentTime: `${appointment.appointmentTime}`,
+          message: `${appointment.message}`,
         };
       });
 
@@ -95,6 +103,13 @@ export default function MyCalendar() {
         prevEvents.filter((e) => e.id !== eventToDelete.id)
       );
       setModalShow(false);
+      setShowSuccessModal(true);
+
+      // Redirect to another page after 2 seconds
+      setTimeout(() => {
+        // Perform the redirect here
+        setShowSuccessModal(false);
+      }, 2000);
     } catch (error) {
       console.error("Error deleting appointment", error);
     }
@@ -117,19 +132,46 @@ export default function MyCalendar() {
 
   return (
     <div className="calendar-container" style={{ paddingTop: 15 }}>
-      <Modal show={modalShow} onHide={() => setModalShow(false)}> 
+      <Modal show={modalShow} onHide={() => setModalShow(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Confirmation</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Are you sure you want to delete this event?</Modal.Body>
+        <Modal.Body>
+          Are you sure you want to delete this event? A cancellation email will
+          automatically be sent out to the client. <br />
+          <strong>Name:</strong> {eventToDelete?.extendedProps?.name}<br />
+          <strong>Email:</strong> {eventToDelete?.extendedProps?.email}<br />
+          <strong>Phone Number:</strong>{eventToDelete?.extendedProps?.phoneNumber}<br />
+          <strong> Appointment Date:</strong> {eventToDelete?.extendedProps?.appointmentDate} @ {eventToDelete?.extendedProps?.appointmentTime}<br />
+          <strong>Message:</strong> {eventToDelete?.extendedProps?.message}
+        </Modal.Body>
+
         <Modal.Footer>
-          <Button variant="secondary" type="submit" className="custom-btn" onClick={() => setModalShow(false)}>
+          <Button
+            variant="secondary"
+            type="submit"
+            className="custom-btn"
+            onClick={() => setModalShow(false)}
+          >
             Cancel
           </Button>
-          <Button variant="primary" type="submit" className="custom-btn" onClick={handleConfirm}>
+          <Button
+            variant="primary"
+            type="submit"
+            className="custom-btn"
+            onClick={handleConfirm}
+          >
             Delete
           </Button>
         </Modal.Footer>
+      </Modal>
+      <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Success</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Appointment successfully deleted. Redirecting...
+        </Modal.Body>
       </Modal>
       <FullCalendar {...calendarConfig} />
     </div>

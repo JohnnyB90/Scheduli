@@ -5,7 +5,6 @@ import { QUERY_USER } from "../../utils/queries";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../utils/auth";
 import InputMask from "react-input-mask";
-import Button from "react-bootstrap/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClipboard } from "@fortawesome/free-solid-svg-icons";
 import "./style.css";
@@ -67,6 +66,7 @@ const FormField = ({ field, displayName, value, onChange }) => {
 };
 
 export default function AccountSettings() {
+  const [showTooltip, setShowTooltip] = useState(false);
   const navigate = useNavigate();
   const decodedToken = AuthService.getProfile();
   const userId = decodedToken ? decodedToken.data._id : null;
@@ -111,7 +111,7 @@ export default function AccountSettings() {
 
   // Function to generate the appointment URL
   const getAppointmentUrl = (userId) => {
-    return `https://scheduli-adfba105dbbc.herokuapp.com/appointment/${userId}`;
+    return `localhost:3000/appointment/${userId}`;
   };
 
   useEffect(() => {
@@ -229,6 +229,14 @@ export default function AccountSettings() {
       .then(() => {
         // Show success message or perform any other actions
         console.log("Appointment URL copied to clipboard!");
+
+        // Show the tooltip
+        setShowTooltip(true);
+
+        // Hide the tooltip after 2 seconds
+        setTimeout(() => {
+          setShowTooltip(false);
+        }, 2000);
       })
       .catch((error) => {
         // Show error message or handle the error
@@ -258,8 +266,25 @@ export default function AccountSettings() {
                     >
                       <FontAwesomeIcon icon={faClipboard} />
                     </button>
+                    {showTooltip && (
+                      <div
+                        style={{
+                          position: "absolute",
+                          backgroundColor: "#ffffff",
+                          color: "black",
+                          textDecorationStyle: "bold",
+                          borderRadius: "10px",
+                          padding: "10px",
+                          zIndex: 1,
+                          marginTop: "30px",
+                        }}
+                      >
+                        Copied to clipboard!
+                      </div>
+                    )}
                     <p>Click the clipboard to share your calendar</p>
                   </div>
+
                   <div className="row">
                     <div className="col-md-6">
                       {settingsKeys.slice(0, middleIndex).map((key) => (

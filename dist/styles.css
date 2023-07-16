@@ -1158,6 +1158,37 @@ button:active {
   .custom-btn:hover {
     transform: scale(0.85);
   }
+
+  .share-calendar-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .share-calendar-button-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .share-calendar-button p {
+    margin: 0;
+  }
+  
+
+  .tooltip {
+  position: absolute;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px 10px;
+  border-radius: 6px;
+  z-index: 1;
+}
+
+  
   
 /*!************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./client/node_modules/bootstrap/dist/css/bootstrap.min.css ***!

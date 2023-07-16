@@ -1,6 +1,7 @@
 const { AuthenticationError } = require("apollo-server-express");
 const { User, Appointment } = require("../models");
 const { signToken } = require("../utils/auth");
+const nodeMailer = require('nodemailer');
 
 const resolvers = {
   Query: {
@@ -22,11 +23,11 @@ const resolvers = {
       }
       return await Appointment.find({ user: userId });
     },
-    
+
     appointment: async (_, { _id }) => {
       return await Appointment.findById(_id);
     },
-    },   
+  },
   Mutation: {
     createAppointment: async (
       _,
@@ -69,6 +70,35 @@ const resolvers = {
 
         const createdAppointment = await appointment.save();
 
+        // Create the transporter object using the default SMTP transport
+        let transporter = nodeMailer.createTransport({
+          service: 'gmail',
+          auth: {
+            type: 'OAuth2',
+            user: process.env.REACT_APP_MAIL_USERNAME,
+            clientId: process.env.REACT_APP_OAUTH_CLIENTID,
+            clientSecret: process.env.REACT_APP_OAUTH_CLIENT_SECRET,
+            refreshToken: process.env.REACT_APP_OAUTH_REFRESH_TOKEN,
+          },
+        });
+
+        // Define email options
+        const mailOptions = {
+          from: process.env.REACT_APP_MAIL_USERNAME,
+          to: email,
+          subject: "Appointment Confirmation",
+          text: `Hello ${firstName} ${lastName}, this is to confirm your appointment on ${appointmentDate} at ${appointmentTime}`,
+        };
+
+        // Send the email
+        transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log("Email sent: " + info.response);
+          }
+        });
+
         return createdAppointment;
       } catch (error) {
         console.error("Error creating appointment", error);
@@ -77,7 +107,49 @@ const resolvers = {
     },
     deleteAppointment: async (_, { _id }) => {
       try {
+        const appointmentToDelete = await Appointment.findById(_id);
+        
+        if (!appointmentToDelete) {
+          throw new Error("Appointment not found");
+        }
+        
+        const email = appointmentToDelete.email;
+        const firstName = appointmentToDelete.firstName;
+        const lastName = appointmentToDelete.lastName;
+        const appointmentDate = appointmentToDelete.appointmentDate;
+        const appointmentTime = appointmentToDelete.appointmentTime;
+  
         const deletedAppointment = await Appointment.findByIdAndDelete(_id);
+  
+        // Create the transporter object using the default SMTP transport
+        let transporter = nodeMailer.createTransport({
+          service: 'gmail',
+          auth: {
+            type: 'OAuth2',
+            user: process.env.REACT_APP_MAIL_USERNAME,
+            clientId: process.env.REACT_APP_OAUTH_CLIENTID,
+            clientSecret: process.env.REACT_APP_OAUTH_CLIENT_SECRET,
+            refreshToken: process.env.REACT_APP_OAUTH_REFRESH_TOKEN,
+          },
+        });
+  
+        // Define email options
+        const mailOptions = {
+          from: process.env.REACT_APP_MAIL_USERNAME,
+          to: email,
+          subject: 'Appointment Cancellation Notice',
+          text: `Hello ${firstName} ${lastName}, this is to inform you that your appointment on ${appointmentDate} @ ${appointmentTime} has been cancelled. Please feel free to give us a call to reschedule.`
+        };
+  
+        // Send the email
+        transporter.sendMail(mailOptions, function(error, info){
+          if (error) {
+            console.log(error);
+          } else {
+            console.log('Email sent: ' + info.response);
+          }
+        });
+  
         return deletedAppointment;
       } catch (error) {
         console.error("Error deleting appointment", error);

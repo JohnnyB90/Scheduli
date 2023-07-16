@@ -6,6 +6,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { useMutation } from "@apollo/client";
 import { CREATE_APPOINTMENT } from "../../utils/mutations";
+import { GET_ALL_APPOINTMENTS } from "../../utils/queries";
 import { TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
@@ -84,68 +85,56 @@ export default function ClientAppointment() {
     }));
   }
 
- async function handleSubmit(event) {
-  event.preventDefault();
+  async function handleSubmit(event) {
+    event.preventDefault();
 
-  // Get the token from authService
-  const token = authService.getToken();
-  console.log("Token:", token);
+    // Get the token from authService
+    const token = authService.getToken();
+    console.log("Token:", token);
 
-  // Decode the token to get the user ID
-  const decodedToken = jwt_decode(token);
-  const userId = decodedToken.data._id;
-  console.log(userId);
+    // Decode the token to get the user ID
+    const decodedToken = jwt_decode(token);
+    const userId = decodedToken.data._id;
+    console.log(userId);
 
-  const { firstName, lastName, email, phone, message, dateTime } = formState;
-  const formattedDate = format(dateTime, "MM/dd/yyyy");
-  const formattedTime = format(dateTime, "hh:mm a");
+    const { firstName, lastName, email, phone, message, dateTime } = formState;
+    const formattedDate = format(dateTime, "MM/dd/yyyy");
+    const formattedTime = format(dateTime, "hh:mm a");
 
-  const requestOptions = {
-    method: 'POST',
-    headers: { 
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`  // Add the token to request headers if your server requires authentication
-    },
-    body: JSON.stringify({
-      user: userId,
-      firstName,
-      lastName,
-      appointmentDate: formattedDate,
-      appointmentTime: formattedTime,
-      email,
-      phone,
-      message
-    })
-  };
-  console.log(requestOptions);
+    try {
+      const { data } = await createAppointment({
+        variables: {
+          userId,
+          firstName,
+          lastName,
+          appointmentDate: formattedDate,
+          appointmentTime: formattedTime,
+          email,
+          phone,
+          message,
+        },
+      });
 
-  try {
-    const response = await fetch('/api/appointment_details', requestOptions);
-    if (response.ok) {
-      const jsonResponse = await response.json();
-      console.log(jsonResponse);
-      // ... do something with the jsonResponse if needed
-      setSuccessMessage("Appointment created successfully");
-      setErrorMessage("");
-      setSubmitted(true);
+      if (data) {
+        console.log(data);
+        // ... do something with the data if needed
+        setSuccessMessage("Appointment created successfully");
+        setErrorMessage("");
+        setSubmitted(true);
 
-      // Redirect to calendar route after 2 seconds
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 2000);
-    } else {
-      console.error('Error creating appointment: ', response.statusText);
+        // Redirect to calendar route after 2 seconds
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Error creating appointment", error);
       setErrorMessage("Error creating appointment");
       setSuccessMessage("");
     }
-  } catch (error) {
-    console.error('Error creating appointment', error);
-    setErrorMessage("Error creating appointment");
-    setSuccessMessage("");
-  }
 
-  setRemainingChars(maxMessageLength);
-}
+    setRemainingChars(maxMessageLength);
+  }
 
   return (
     <section className="container mobile">
